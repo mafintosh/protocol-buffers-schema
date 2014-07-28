@@ -24,6 +24,8 @@ message Line {
 }
 ```
 
+The run the following example
+
 ``` js
 var fs = require('fs')
 var schema = require('protobuf-schema')
