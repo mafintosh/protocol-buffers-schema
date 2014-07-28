@@ -6,6 +6,8 @@ No nonsense [protobuf](https://code.google.com/p/protobuf/) schema parser writte
 npm install protobuf-schema
 ```
 
+[![build status](http://img.shields.io/travis/mafintosh/protobuf-schema.svg?style=flat)](http://travis-ci.org/mafintosh/protobuf-schema)
+
 ## Usage
 
 First save the following file as `example.proto`
