@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/mafintosh/protobuf-schema/issues"
   },
-  "homepage": "https://github.com/mafintosh/protobuf-schema"
+  "homepage": "https://github.com/mafintosh/protobuf-schema",
+  "devDependencies": {
+    "tape": "^2.13.4"
+  }
 }

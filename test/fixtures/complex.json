@@ -1,0 +1,95 @@
+{
+  "package": "tutorial",
+  "enums": [],
+  "messages": [
+    {
+      "name": "Person",
+      "enums": [
+        {
+          "name": "PhoneType",
+          "values": {
+            "MOBILE": 0,
+            "HOME": 1,
+            "WORK": 2
+          }
+        }
+      ],
+      "messages": [
+        {
+          "name": "PhoneNumber",
+          "enums": [],
+          "messages": [],
+          "fields": [
+            {
+              "name": "number",
+              "type": "string",
+              "tag": 1,
+              "required": true,
+              "repeated": false,
+              "options": {}
+            },
+            {
+              "name": "type",
+              "type": "PhoneType",
+              "tag": 2,
+              "required": false,
+              "repeated": false,
+              "options": {
+                "default": "HOME"
+              }
+            }
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "name": "name",
+          "type": "string",
+          "tag": 1,
+          "required": true,
+          "repeated": false,
+          "options": {}
+        },
+        {
+          "name": "id",
+          "type": "int32",
+          "tag": 2,
+          "required": true,
+          "repeated": false,
+          "options": {}
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "tag": 3,
+          "required": false,
+          "repeated": false,
+          "options": {}
+        },
+        {
+          "name": "phone",
+          "type": "PhoneNumber",
+          "tag": 4,
+          "required": false,
+          "repeated": true,
+          "options": {}
+        }
+      ]
+    },
+    {
+      "name": "AddressBook",
+      "enums": [],
+      "messages": [],
+      "fields": [
+        {
+          "name": "person",
+          "type": "Person",
+          "tag": 1,
+          "required": false,
+          "repeated": true,
+          "options": {}
+        }
+      ]
+    }
+  ]
+}
