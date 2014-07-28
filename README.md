@@ -41,72 +41,61 @@ Running the above example will print something like
 
 ``` js
 {
-  "package": null,
-  "enums": [],
-  "messages": [
-    {
-      "name": "Point",
-      "enums": [],
-      "messages": [],
-      "fields": [
-        {
-          "name": "x",
-          "type": "int32",
-          "tag": 1,
-          "required": true,
-          "repeated": false,
-          "options": {}
-        },
-        {
-          "name": "y",
-          "type": "int32",
-          "tag": 2,
-          "required": true,
-          "repeated": false,
-          "options": {}
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "tag": 3,
-          "required": false,
-          "repeated": false,
-          "options": {}
-        }
-      ]
-    },
-    {
-      "name": "Line",
-      "enums": [],
-      "messages": [],
-      "fields": [
-        {
-          "name": "start",
-          "type": "Point",
-          "tag": 1,
-          "required": true,
-          "repeated": false,
-          "options": {}
-        },
-        {
-          "name": "end",
-          "type": "Point",
-          "tag": 2,
-          "required": true,
-          "repeated": false,
-          "options": {}
-        },
-        {
-          "name": "label",
-          "type": "string",
-          "tag": 3,
-          "required": false,
-          "repeated": false,
-          "options": {}
-        }
-      ]
-    }
-  ]
+  package: null,
+  enums: [],
+  messages: [{
+    name: 'Point',
+    enums: [],
+    messages: [],
+    fields: [{
+      name: 'x',
+      type: 'int32',
+      tag: 1,
+      required: true,
+      repeated: false,
+      options: {}
+    }, {
+      name: 'y',
+      type: 'int32',
+      tag: 2,
+      required: true,
+      repeated: false,
+      options: {}
+    }, {
+      name: 'label',
+      type: 'string',
+      tag: 3,
+      required: false,
+      repeated: false,
+      options: {}
+    }]
+  }, {
+    name: 'Line',
+    enums: [],
+    messages: [],
+    fields: [{
+      name: 'start',
+      type: 'Point',
+      tag: 1,
+      required: true,
+      repeated: false,
+      options: {}
+    }, {
+      name: 'end',
+      type: 'Point',
+      tag: 2,
+      required: true,
+      repeated: false,
+      options: {}
+    }, {
+      name: 'label',
+      type: 'string',
+      tag: 3,
+      required: false,
+      repeated: false,
+      options: {}
+    }]
+  }]
 }
 ```
 
