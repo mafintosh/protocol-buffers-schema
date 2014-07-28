@@ -1,0 +1,27 @@
+{
+  "name": "protobuf-schema",
+  "version": "0.0.0",
+  "description": "No nonsense protobuf schema parser written in Javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafintosh/protobuf-schema"
+  },
+  "keywords": [
+    "protobuf",
+    "protocol",
+    "buffers",
+    "schema",
+    "parser",
+    "parse"
+  ],
+  "author": "Mathias Buus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mafintosh/protobuf-schema/issues"
+  },
+  "homepage": "https://github.com/mafintosh/protobuf-schema"
+}
