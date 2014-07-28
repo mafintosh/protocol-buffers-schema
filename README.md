@@ -101,6 +101,16 @@ Running the above example will print something like
 }
 ```
 
+## API
+
+#### `schema.parse(protobufSchemaBufferOrString)`
+
+Parses a .proto schema into a javascript object
+
+#### `schema.stringify(schema)`
+
+Stringifies a parsed schema back into .proto format
+
 ## License
 
 MIT
