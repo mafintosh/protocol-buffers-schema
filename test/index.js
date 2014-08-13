@@ -40,3 +40,8 @@ tape('throws on invalid', function(t) {
     t.ok(true, 'should fail')
   }
 })
+
+tape('comments parse', function(t) {
+  t.same(schema.parse(fixture('comments.proto')), require('./fixtures/comments.json'))
+  t.end()
+})
