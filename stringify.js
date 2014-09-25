@@ -45,11 +45,16 @@ var onenum = function(e, result) {
   return result
 }
 
-var onoption = function(o, result) {
-  option = Object.keys(o)[0]
-  value = o[option]
-  if (typeof value === 'string' && option !== "optimize_for") value = '"'+value+'"'
-  return result.push('option '+option+' = '+value+';')
+var parseOptions = function(o, result) {
+  var keys = Object.keys(o)
+  keys.forEach(function(option){
+    var v = o[option]
+    if (typeof v === 'string' && option !== "optimize_for") v = '"'+v+'"'
+    result.push('option '+option+' = '+v+';')
+  })
+  if (keys.length > 0) {
+    result.push('')
+  }
 }
 
 var indent = function(lvl) {
@@ -62,14 +67,10 @@ var indent = function(lvl) {
 module.exports = function(schema) {
   var result = []
   if (schema.package) result.push('package '+schema.package+';', '')
+    
+  if (!schema.options) schema.options = {}
 
-  if (!schema.options) schema.options = []
-  schema.options.forEach(function(o){
-    onoption(o,result)
-  })
-  if(schema.options.length !== 0) {
-    result.push('')
-  }
+  parseOptions(schema.options, result)
 
   if (!schema.enums) schema.enums = []
   schema.enums.forEach(function(e) {

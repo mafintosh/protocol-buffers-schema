@@ -92,10 +92,10 @@
       ]
     }
   ],
-  "options":[
-    {"java_package": "com.mafintosh.generated"},
-    {"java_outer_classname": "Example"},
-    {"java_generate_equals_and_hash": true},
-    {"optimize_for": "SPEED"}
-  ]
+  "options":{
+    "java_package": "com.mafintosh.generated",
+    "java_outer_classname": "Example",
+    "java_generate_equals_and_hash": true,
+    "optimize_for": "SPEED"
+  }
 }

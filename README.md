@@ -98,7 +98,7 @@ Running the above example will print something like
       options: {}
     }]
   }],
-  options:[]
+  options:{}
 }
 ```
 
