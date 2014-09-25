@@ -1,5 +1,10 @@
 package tutorial;
 
+option java_package = "com.mafintosh.generated";
+option java_outer_classname = "Example";
+option java_generate_equals_and_hash = true;
+option optimize_for = SPEED;
+
 message Person {
   enum PhoneType {
     MOBILE = 0;

@@ -184,12 +184,59 @@ var onenum = function(tokens) {
   throw new Error('No closing tag for enum')
 }
 
+var optimize_for_values = ['SPEED', 'CODE_SIZE', 'LITE_RUNTIME']
+
+var onoption = function(tokens) {
+  var option = {}
+  var key = null
+  var value = null
+
+  while (tokens.length) {
+    if (tokens[0] === ';') {
+      tokens.shift()
+      return option
+    }
+    switch (tokens[0]) {
+      case 'option':
+      tokens.shift()
+      key = tokens.shift()
+      break
+ 
+      case '=':
+      tokens.shift()
+      if (key === null) {
+        throw new Error('Not found key for option with value: '+tokens[0])
+      }
+      value = tokens.shift()
+      switch (value.toLowerCase()) {
+        case 'true':
+          value = true
+        break
+        case 'false':
+          value = false
+        break
+      }
+      if (key === "optimize_for" && optimize_for_values.indexOf(value) === -1) {
+        throw new Error('Unexpected value "'+value+'" for option optimize_for. Expected values: '+optimize_for_values.join(','))
+      }
+
+      if (value.replace) value = value.replace(/^"+|"+$/gm,'')
+      option[key] = value
+      break
+      
+      default:
+      throw new Error('Unexpected token in option: '+tokens[0])
+    }
+  }
+}
+
 module.exports = function(buf) {
   var tokens = tokenize(buf.toString())
   var schema = {
     package: null,
     enums: [],
-    messages: []
+    messages: [],
+    options: {}
   }
 
   while (tokens.length) {
@@ -206,6 +253,15 @@ module.exports = function(buf) {
       schema.enums.push(onenum(tokens))
       break
 
+      case 'option':
+      var opt = onoption(tokens)
+      var key = Object.keys(opt)[0]
+      if (schema.options[key]) {
+        throw new Error('Duplicate option '+key)
+      }
+      schema.options[key] = opt[key]
+      break
+
       default:
       throw new Error('Unexpected token: '+tokens[0])
     }
@@ -213,3 +269,4 @@ module.exports = function(buf) {
 
   return schema
 }
+/* vim: set ts=2 sw=2 sts=2 et: */
