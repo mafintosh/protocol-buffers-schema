@@ -97,7 +97,8 @@ Running the above example will print something like
       repeated: false,
       options: {}
     }]
-  }]
+  }],
+  options:[]
 }
 ```
 

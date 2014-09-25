@@ -45,6 +45,13 @@ var onenum = function(e, result) {
   return result
 }
 
+var onoption = function(o, result) {
+  option = Object.keys(o)[0]
+  value = o[option]
+  if (typeof value === 'string' && option !== "optimize_for") value = '"'+value+'"'
+  return result.push('option '+option+' = '+value+';')
+}
+
 var indent = function(lvl) {
   return function(line) {
     if (Array.isArray(line)) return line.map(indent(lvl+'  ')).join('\n')
@@ -55,6 +62,14 @@ var indent = function(lvl) {
 module.exports = function(schema) {
   var result = []
   if (schema.package) result.push('package '+schema.package+';', '')
+
+  if (!schema.options) schema.options = []
+  schema.options.forEach(function(o){
+    onoption(o,result)
+  })
+  if(schema.options.length !== 0) {
+    result.push('')
+  }
 
   if (!schema.enums) schema.enums = []
   schema.enums.forEach(function(e) {
@@ -68,3 +83,4 @@ module.exports = function(schema) {
 
   return result.map(indent('')).join('\n')
 }
+/* vim: set ts=2 sw=2 sts=2 et: */
