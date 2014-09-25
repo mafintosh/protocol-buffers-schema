@@ -184,44 +184,34 @@ var onenum = function(tokens) {
   throw new Error('No closing tag for enum')
 }
 
-var optimize_for_values = ['SPEED', 'CODE_SIZE', 'LITE_RUNTIME']
-
 var onoption = function(tokens) {
-  var option = {}
-  var key = null
+  var name = null
   var value = null
+
+  var parse = function(value) {
+    if (value === 'true') return true
+    if (value === 'false') return false
+    return value.replace(/^"+|"+$/gm,'')
+  }
 
   while (tokens.length) {
     if (tokens[0] === ';') {
       tokens.shift()
-      return option
+      return {name:name, value:value}
     }
     switch (tokens[0]) {
       case 'option':
       tokens.shift()
-      key = tokens.shift()
+      name = tokens.shift()
       break
  
       case '=':
       tokens.shift()
-      if (key === null) {
-        throw new Error('Not found key for option with value: '+tokens[0])
+      if (name === null) throw new Error('Expected key for option with value: '+tokens[0])
+      value = parse(tokens.shift())
+      if (name === 'optimize_for' && !/^(SPEED|CODE_SIZE|LITE_RUNTIME)$/.test(value)) {
+        throw new Error('Unexpected value for option optimize_for: '+value)
       }
-      value = tokens.shift()
-      switch (value.toLowerCase()) {
-        case 'true':
-          value = true
-        break
-        case 'false':
-          value = false
-        break
-      }
-      if (key === "optimize_for" && optimize_for_values.indexOf(value) === -1) {
-        throw new Error('Unexpected value "'+value+'" for option optimize_for. Expected values: '+optimize_for_values.join(','))
-      }
-
-      if (value.replace) value = value.replace(/^"+|"+$/gm,'')
-      option[key] = value
       break
       
       default:
@@ -255,11 +245,8 @@ module.exports = function(buf) {
 
       case 'option':
       var opt = onoption(tokens)
-      var key = Object.keys(opt)[0]
-      if (schema.options[key]) {
-        throw new Error('Duplicate option '+key)
-      }
-      schema.options[key] = opt[key]
+      if (schema.options[opt.name]) throw new Error('Duplicate option '+opt.name)
+      schema.options[opt.name] = opt.value
       break
 
       default:
@@ -269,4 +256,3 @@ module.exports = function(buf) {
 
   return schema
 }
-/* vim: set ts=2 sw=2 sts=2 et: */

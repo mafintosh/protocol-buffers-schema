@@ -45,11 +45,11 @@ var onenum = function(e, result) {
   return result
 }
 
-var parseOptions = function(o, result) {
+var onoption = function(o, result) {
   var keys = Object.keys(o)
   keys.forEach(function(option){
     var v = o[option]
-    if (typeof v === 'string' && option !== "optimize_for") v = '"'+v+'"'
+    if (typeof v === 'string' && option !== 'optimize_for') v = '"'+v+'"'
     result.push('option '+option+' = '+v+';')
   })
   if (keys.length > 0) {
@@ -70,7 +70,7 @@ module.exports = function(schema) {
     
   if (!schema.options) schema.options = {}
 
-  parseOptions(schema.options, result)
+  onoption(schema.options, result)
 
   if (!schema.enums) schema.enums = []
   schema.enums.forEach(function(e) {
@@ -84,4 +84,3 @@ module.exports = function(schema) {
 
   return result.map(indent('')).join('\n')
 }
-/* vim: set ts=2 sw=2 sts=2 et: */
