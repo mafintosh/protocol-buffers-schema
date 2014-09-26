@@ -1,4 +1,8 @@
 var tokenize = require('./tokenize')
+var fs       = require('fs')
+var path     = require('path')
+
+var protos_root_dir = null
 
 var onfieldoptions = function(tokens) {
   var opts = {}
@@ -220,7 +224,35 @@ var onoption = function(tokens) {
   }
 }
 
-module.exports = function(buf) {
+var onimport = function(tokens) {
+  tokens.shift()
+  var file = tokens.shift().replace(/^"+|"+$/gm,'')
+  if (protos_root_dir) file = protos_root_dir+file
+
+  if (tokens[0] !== ';') {
+    throw new Error('Unexpected token: '+tokens[0]+'. Expected ";"')
+  }
+  tokens.shift()
+  if (!fs.existsSync(file)) {
+    throw new Error('Imported file '+file+' not found')
+  }
+  return loadProtoFile(file)
+}
+
+var loadProtoFile = function(file, opt) {
+  if (!opt) {
+    opt = {
+      root_dir: path.dirname(file)
+    } 
+  }
+  return parse(fs.readFileSync(file,opt))
+}
+
+var parse = function(buf,options) {
+  if (!options) options = {}
+
+  if (options.root_dir) protos_root_dir = options.root_dir
+
   var tokens = tokenize(buf.toString())
   var schema = {
     package: null,
@@ -249,10 +281,22 @@ module.exports = function(buf) {
       schema.options[opt.name] = opt.value
       break
 
+      case 'import':
+      var imported = onimport(tokens)
+      imported.enums.forEach(function(e){
+        schema.enums.push(e)
+      })
+      imported.messages.forEach(function(e){
+        schema.messages.push(e)
+      })
+      break
+
       default:
       throw new Error('Unexpected token: '+tokens[0])
     }
   }
-
   return schema
 }
+module.exports = parse
+module.exports.loadProtoFile = loadProtoFile
+/* vim: set ts=2 sw=2 sts=2 et: */

@@ -45,3 +45,14 @@ tape('comments parse', function(t) {
   t.same(schema.parse(fixture('comments.proto')), require('./fixtures/comments.json'))
   t.end()
 })
+
+tape('schema with imports', function(t) {
+  t.same(schema.parse(fixture('search.proto'),{root_dir:__dirname+'/fixtures/'}), require('./fixtures/search.json'))
+  t.end()
+})
+
+tape('schema with imports loaded by path', function(t) {
+  t.same(schema.loadProtoFile('./test/fixtures/search.proto'), require('./fixtures/search.json'))
+  t.end()
+})
+/* vim: set ts=2 sw=2 sts=0 et: */
