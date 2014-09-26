@@ -299,4 +299,3 @@ var parse = function(buf,options) {
 }
 module.exports = parse
 module.exports.loadProtoFile = loadProtoFile
-/* vim: set ts=2 sw=2 sts=2 et: */

@@ -55,4 +55,3 @@ tape('schema with imports loaded by path', function(t) {
   t.same(schema.loadProtoFile('./test/fixtures/search.proto'), require('./fixtures/search.json'))
   t.end()
 })
-/* vim: set ts=2 sw=2 sts=0 et: */
