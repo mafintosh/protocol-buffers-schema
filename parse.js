@@ -236,22 +236,20 @@ var onimport = function(tokens) {
   if (!fs.existsSync(file)) {
     throw new Error('Imported file '+file+' not found')
   }
-  return loadProtoFile(file)
+  return read(file)
 }
 
-var loadProtoFile = function(file, opt) {
-  if (!opt) {
-    opt = {
-      root_dir: path.dirname(file)
-    } 
-  }
-  return parse(fs.readFileSync(file,opt))
-}
-
-var parse = function(buf,options) {
+var read = function(file, options) {
   if (!options) options = {}
+  if (options.root_dir) {
+    protos_root_dir = options.root_dir
+  } else if (!protos_root_dir) {
+    protos_root_dir = path.dirname(file)
+  }
+  return parse(fs.readFileSync(file))
+}
 
-  if (options.root_dir) protos_root_dir = options.root_dir
+var parse = function(buf) {
 
   var tokens = tokenize(buf.toString())
   var schema = {
@@ -297,5 +295,5 @@ var parse = function(buf,options) {
   }
   return schema
 }
-module.exports = parse
-module.exports.loadProtoFile = loadProtoFile
+module.exports.parse = parse
+module.exports.read = read
