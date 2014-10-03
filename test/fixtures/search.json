@@ -1,0 +1,33 @@
+{"package":null,
+	"enums":[],
+	"messages":[
+		{
+			"name":"Result",
+			"enums":[],
+			"messages":[],
+			"fields":[
+				{
+					"name":"url","type":"string","tag":1,"required":true,"repeated":false,"options":{}
+				},
+				{
+					"name":"title","type":"string","tag":2,"required":false,"repeated":false,"options":{}
+				},
+				{
+					"name":"snippets","type":"string","tag":3,"required":false,"repeated":true,"options":{}
+				}
+			]
+		},
+		{
+			"name":"SearchResponse",
+			"enums":[],
+			"messages":[],
+			"fields":[
+				{
+					"name":"result","type":"Result","tag":1,"required":false,"repeated":true,"options":{}
+				
+				}
+			]
+		}
+	],
+	"options":{}
+}
