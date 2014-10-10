@@ -1,4 +1,5 @@
 var tokenize = require('./tokenize')
+var MAX_RANGE = 0x1FFFFFFF
 
 var onfieldoptions = function(tokens) {
   var opts = {}
@@ -75,7 +76,8 @@ var onmessagebody = function(tokens) {
   var body = {
     enums: [],
     messages: [],
-    fields: []
+    fields: [],
+    extensions: null
   }
 
   while (tokens.length) {
@@ -94,6 +96,10 @@ var onmessagebody = function(tokens) {
       body.messages.push(onmessage(tokens))
       break
 
+      case 'extensions':
+      body.extensions = onextensions(tokens)
+      break
+
       default:
       throw new Error('Unexpected token in message: '+tokens[0])
     }
@@ -102,6 +108,31 @@ var onmessagebody = function(tokens) {
   return body
 }
 
+var onextend = function(tokens) {
+  var out = {
+    name: tokens[1],
+    message: onmessage(tokens)
+  }
+  return out
+}
+
+var onextensions = function(tokens) {
+  tokens.shift()
+  var from = parseInt(tokens.shift(), 10)
+  if (isNaN(from))
+    throw new Error("Invalid from in extensions definition")
+  if (tokens.shift() !== "to")
+    throw new Error("Expected keyword 'to' in extensions definition")
+  var to = tokens.shift()
+  if (to === "max")
+    to = MAX_RANGE
+  to = parseInt(to, 10)
+  if (isNaN(to))
+    throw new Error("Invalid to in extensions definition")
+  if (tokens.shift() !== ";")
+    throw new Error("Missing ; in extensions definition")
+  return {from: from, to: to}
+}
 var onmessage = function(tokens) {
   tokens.shift()
 
@@ -127,6 +158,7 @@ var onmessage = function(tokens) {
       msg.enums = body.enums
       msg.messages = body.messages
       msg.fields = body.fields
+      msg.extensions = body.extensions
       return msg
     }
 
@@ -175,6 +207,9 @@ var onenum = function(tokens) {
   while (tokens.length) {
     if (tokens[0] === '}') {
       tokens.shift()
+      // there goes optional semicolon after the enclosing "}"
+      if (tokens[0] == ";")
+        tokens.shift()
       return e
     }
     var val = onenumvalue(tokens)
@@ -204,7 +239,7 @@ var onoption = function(tokens) {
       tokens.shift()
       name = tokens.shift()
       break
- 
+
       case '=':
       tokens.shift()
       if (name === null) throw new Error('Expected key for option with value: '+tokens[0])
@@ -213,7 +248,7 @@ var onoption = function(tokens) {
         throw new Error('Unexpected value for option optimize_for: '+value)
       }
       break
-      
+
       default:
       throw new Error('Unexpected token in option: '+tokens[0])
     }
@@ -237,7 +272,8 @@ var parse = function(buf) {
     imports: [],
     enums: [],
     messages: [],
-    options: {}
+    options: {},
+    extends: []
   }
 
   while (tokens.length) {
@@ -264,10 +300,28 @@ var parse = function(buf) {
       schema.imports.push(onimport(tokens))
       break
 
+      case 'extend':
+      schema.extends.push(onextend(tokens))
+      break
+
       default:
       throw new Error('Unexpected token: '+tokens[0])
     }
   }
+
+  //now iterate over messages and propagate extends
+  schema.extends.forEach(function(ext) {
+    schema.messages.forEach(function(msg) {
+      if (msg.name === ext.name) {
+        ext.message.fields.forEach(function(field) {
+          if (!msg.extensions || field.tag < msg.extensions.from || field.tag > msg.extensions.to)
+            throw new Error(msg.name+" does not declare "+field.tag+" as an extension number")
+          msg.fields.push(field)
+        })
+      }
+    })
+  })
+
   return schema
 }
 

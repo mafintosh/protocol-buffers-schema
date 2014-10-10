@@ -2,8 +2,10 @@
 	"package":null,
 	"imports": ["./result.proto"],
 	"enums":[],
+	"extends": [],
 	"messages":[{
 		"name":"SearchResponse",
+		"extensions": null,
 		"enums":[],
 		"messages":[],
 		"fields":[
