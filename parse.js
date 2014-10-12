@@ -227,16 +227,11 @@ var onoption = function(tokens) {
 var onimport = function(tokens) {
   tokens.shift()
   var file = tokens.shift().replace(/^"+|"+$/gm,'')
-  if (protos_root_dir) file = protos_root_dir+file
 
-  if (tokens[0] !== ';') {
-    throw new Error('Unexpected token: '+tokens[0]+'. Expected ";"')
-  }
+  if (tokens[0] !== ';') throw new Error('Unexpected token: '+tokens[0]+'. Expected ";"')
+
   tokens.shift()
-  if (!fs.existsSync(file)) {
-    throw new Error('Imported file '+file+' not found')
-  }
-  return read(file)
+  return file
 }
 
 var read = function(file, options) {
@@ -250,10 +245,10 @@ var read = function(file, options) {
 }
 
 var parse = function(buf) {
-
   var tokens = tokenize(buf.toString())
   var schema = {
     package: null,
+    imports: [],
     enums: [],
     messages: [],
     options: {}
@@ -280,13 +275,7 @@ var parse = function(buf) {
       break
 
       case 'import':
-      var imported = onimport(tokens)
-      imported.enums.forEach(function(e){
-        schema.enums.push(e)
-      })
-      imported.messages.forEach(function(e){
-        schema.messages.push(e)
-      })
+      schema.imports.push(onimport(tokens))
       break
 
       default:
@@ -295,5 +284,5 @@ var parse = function(buf) {
   }
   return schema
 }
-module.exports.parse = parse
-module.exports.read = read
+
+module.exports = parse
