@@ -1,5 +1,6 @@
 {
   "package": "tutorial",
+  "imports": [],
   "enums": [],
   "messages": [
     {

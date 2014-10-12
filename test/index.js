@@ -47,11 +47,11 @@ tape('comments parse', function(t) {
 })
 
 tape('schema with imports', function(t) {
-  t.same(schema.read('./test/fixtures/search.proto',{root_dir:__dirname+'/fixtures/'}), require('./fixtures/search.json'))
+  t.same(schema.parse(fixture('search.proto')), require('./fixtures/search.json'))
   t.end()
 })
 
 tape('schema with imports loaded by path', function(t) {
-  t.same(schema.read('./test/fixtures/search.proto'), require('./fixtures/search.json'))
+  t.same(schema.parse(fixture('search.proto')), require('./fixtures/search.json'))
   t.end()
 })
