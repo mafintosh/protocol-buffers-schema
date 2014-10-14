@@ -1,8 +1,4 @@
 var tokenize = require('./tokenize')
-var fs       = require('fs')
-var path     = require('path')
-
-var protos_root_dir = null
 
 var onfieldoptions = function(tokens) {
   var opts = {}
@@ -232,16 +228,6 @@ var onimport = function(tokens) {
 
   tokens.shift()
   return file
-}
-
-var read = function(file, options) {
-  if (!options) options = {}
-  if (options.root_dir) {
-    protos_root_dir = options.root_dir
-  } else if (!protos_root_dir) {
-    protos_root_dir = path.dirname(file)
-  }
-  return parse(fs.readFileSync(file))
 }
 
 var parse = function(buf) {
