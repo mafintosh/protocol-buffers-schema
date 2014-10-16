@@ -2,11 +2,13 @@
   "package": null,
   "imports": [],
   "enums": [],
+  "extends": [],
   "messages": [
     {
       "name": "Point",
       "enums": [],
       "messages": [],
+      "extensions": null,
       "fields": [
         {
           "name": "x",
@@ -37,6 +39,7 @@
     {
       "name": "Line",
       "enums": [],
+      "extensions": null,
       "messages": [],
       "fields": [
         {

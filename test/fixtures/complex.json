@@ -2,9 +2,11 @@
   "package": "tutorial",
   "imports": [],
   "enums": [],
+  "extends": [],
   "messages": [
     {
       "name": "Person",
+      "extensions": null,
       "enums": [
         {
           "name": "PhoneType",
@@ -20,6 +22,7 @@
           "name": "PhoneNumber",
           "enums": [],
           "messages": [],
+          "extensions": null,
           "fields": [
             {
               "name": "number",
@@ -81,6 +84,7 @@
       "name": "AddressBook",
       "enums": [],
       "messages": [],
+      "extensions": null,
       "fields": [
         {
           "name": "person",

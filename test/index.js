@@ -55,3 +55,15 @@ tape('schema with imports loaded by path', function(t) {
   t.same(schema.parse(fixture('search.proto')), require('./fixtures/search.json'))
   t.end()
 })
+
+tape('schema with extends', function(t) {
+  t.same(schema.parse(fixture('extend.proto')), require('./fixtures/extend.json'))
+  t.end()
+})
+
+
+tape('comparing extended and not extended schema', function(t) {
+  var sch = schema.parse(fixture('extend.proto'))
+  t.same(sch.messages.MsgNormal, sch.messages.MsgExtend)
+  t.end()
+})
