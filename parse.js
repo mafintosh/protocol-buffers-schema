@@ -119,18 +119,13 @@ var onextend = function(tokens) {
 var onextensions = function(tokens) {
   tokens.shift()
   var from = parseInt(tokens.shift(), 10)
-  if (isNaN(from))
-    throw new Error("Invalid from in extensions definition")
-  if (tokens.shift() !== "to")
-    throw new Error("Expected keyword 'to' in extensions definition")
+  if (isNaN(from)) throw new Error('Invalid from in extensions definition')
+  if (tokens.shift() !== 'to') throw new Error("Expected keyword 'to' in extensions definition")
   var to = tokens.shift()
-  if (to === "max")
-    to = MAX_RANGE
+  if (to === 'max') to = MAX_RANGE
   to = parseInt(to, 10)
-  if (isNaN(to))
-    throw new Error("Invalid to in extensions definition")
-  if (tokens.shift() !== ";")
-    throw new Error("Missing ; in extensions definition")
+  if (isNaN(to)) throw new Error('Invalid to in extensions definition')
+  if (tokens.shift() !== ';') throw new Error('Missing ; in extensions definition')
   return {from: from, to: to}
 }
 var onmessage = function(tokens) {
@@ -208,8 +203,7 @@ var onenum = function(tokens) {
     if (tokens[0] === '}') {
       tokens.shift()
       // there goes optional semicolon after the enclosing "}"
-      if (tokens[0] == ";")
-        tokens.shift()
+      if (tokens[0] === ';') tokens.shift()
       return e
     }
     var val = onenumvalue(tokens)
@@ -314,8 +308,9 @@ var parse = function(buf) {
     schema.messages.forEach(function(msg) {
       if (msg.name === ext.name) {
         ext.message.fields.forEach(function(field) {
-          if (!msg.extensions || field.tag < msg.extensions.from || field.tag > msg.extensions.to)
+          if (!msg.extensions || field.tag < msg.extensions.from || field.tag > msg.extensions.to) {
             throw new Error(msg.name+" does not declare "+field.tag+" as an extension number")
+          }
           msg.fields.push(field)
         })
       }
