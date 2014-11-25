@@ -67,3 +67,8 @@ tape('comparing extended and not extended schema', function(t) {
   t.same(sch.messages.MsgNormal, sch.messages.MsgExtend)
   t.end()
 })
+
+tape('schema with oneof', function(t) {
+  t.same(schema.parse(fixture('oneof.proto')), require('./fixtures/oneof.json'))
+  t.end()
+})

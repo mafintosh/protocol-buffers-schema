@@ -17,10 +17,12 @@
           }
         }
       ],
+      "oneof": [],
       "messages": [
         {
           "name": "PhoneNumber",
           "enums": [],
+          "oneof": [],
           "messages": [],
           "extensions": null,
           "fields": [
@@ -83,6 +85,7 @@
     {
       "name": "AddressBook",
       "enums": [],
+      "oneof": [],
       "messages": [],
       "extensions": null,
       "fields": [
