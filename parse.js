@@ -77,6 +77,7 @@ var onmessagebody = function(tokens) {
     enums: [],
     messages: [],
     fields: [],
+    oneof: [],
     extensions: null
   }
 
@@ -98,6 +99,10 @@ var onmessagebody = function(tokens) {
 
       case 'extensions':
       body.extensions = onextensions(tokens)
+      break
+
+      case 'oneof':
+      body.oneof.push(ononeof(tokens))
       break
 
       default:
@@ -136,6 +141,7 @@ var onmessage = function(tokens) {
   var msg = {
     name: tokens.shift(),
     enums: [],
+    oneof: [],
     messages: [],
     fields: []
   }
@@ -151,6 +157,7 @@ var onmessage = function(tokens) {
       tokens.shift()
       var body = onmessagebody(body)
       msg.enums = body.enums
+      msg.oneof = body.oneof
       msg.messages = body.messages
       msg.fields = body.fields
       msg.extensions = body.extensions
@@ -211,6 +218,39 @@ var onenum = function(tokens) {
   }
 
   throw new Error('No closing tag for enum')
+}
+
+var ononeof = function(tokens) {
+  tokens.shift()
+
+  var oneof = {
+    name: tokens.shift(),
+    fields: []
+  }
+
+  if (tokens[0] !== '{') throw new Error('Expected { but found '+tokens[0])
+  tokens.shift()
+
+  while (tokens.length) {
+    if (tokens[0] === '}') {
+      tokens.shift()
+      return oneof
+    }
+
+    var field = {}
+
+    field.type = tokens.shift()
+    field.name = tokens.shift()
+    if (tokens[0] !== '=') throw new Error('Expected = but found '+tokens[0])
+    tokens.shift()
+    field.tag = parseInt(tokens.shift(), 10)
+
+    oneof.fields.push(field)
+    if (tokens[0] !== ';') throw new Error('Expected ; but found '+tokens[0])
+    tokens.shift()
+  }
+
+  throw new Error('No closing tag for oneof')
 }
 
 var onoption = function(tokens) {

@@ -6,6 +6,7 @@
     {
       "name": "MsgNormal",
       "enums": [],
+      "oneof": [],
       "messages": [],
       "fields": [
         {
@@ -54,6 +55,7 @@
     {
       "name": "MsgExtend",
       "enums": [],
+      "oneof": [],
       "messages": [],
       "fields": [
         {
@@ -110,6 +112,7 @@
       "message": {
         "name": "MsgExtend",
         "enums": [],
+        "oneof": [],
         "messages": [],
         "fields": [
           {

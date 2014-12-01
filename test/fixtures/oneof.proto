@@ -1,0 +1,8 @@
+message Data {
+  oneof type {
+    string string = 1;
+    float float = 2;
+    bool null = 3;
+  }
+  optional type value = 1;
+}

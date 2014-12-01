@@ -1,0 +1,47 @@
+{
+  "package": null,
+  "imports": [],
+  "enums": [],
+  "messages": [
+    {
+      "name": "Data",
+      "enums": [],
+      "oneof": [
+        {
+          "name": "type",
+          "fields": [
+            {
+              "type": "string",
+              "name": "string",
+              "tag": 1
+            },
+            {
+              "type": "float",
+              "name": "float",
+              "tag": 2
+            },
+            {
+              "type": "bool",
+              "name": "null",
+              "tag": 3
+            }
+          ]
+        }
+      ],
+      "messages": [],
+      "fields": [
+        {
+          "name": "value",
+          "type": "type",
+          "tag": 1,
+          "required": false,
+          "repeated": false,
+          "options": {}
+        }
+      ],
+      "extensions": null
+    }
+  ],
+  "options": {},
+  "extends": []
+}
