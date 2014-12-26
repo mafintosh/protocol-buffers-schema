@@ -216,6 +216,7 @@ var onenum = function(tokens) {
     if (tokens[0] === 'option') {
       // just skip "option allow_alias = true;"
       while (tokens.shift() !== ';') {
+        // do nothing
       }
     }
     var val = onenumvalue(tokens)
