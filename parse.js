@@ -213,6 +213,11 @@ var onenum = function(tokens) {
       if (tokens[0] === ';') tokens.shift()
       return e
     }
+    if (tokens[0] === 'option') {
+      // just skip "option allow_alias = true;"
+      while (tokens.shift() !== ';') {
+      }
+    }
     var val = onenumvalue(tokens)
     e.values[val.name] = val.value
   }
