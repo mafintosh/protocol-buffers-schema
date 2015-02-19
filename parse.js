@@ -43,7 +43,7 @@ var onfield = function(tokens) {
     switch (tokens[0]) {
       case '=':
       tokens.shift()
-      field.tag = parseInt(tokens.shift(), 10)
+      field.tag = Number(tokens.shift())
       break
 
       case 'repeated':
@@ -123,12 +123,12 @@ var onextend = function(tokens) {
 
 var onextensions = function(tokens) {
   tokens.shift()
-  var from = parseInt(tokens.shift(), 10)
+  var from = Number(tokens.shift())
   if (isNaN(from)) throw new Error('Invalid from in extensions definition')
   if (tokens.shift() !== 'to') throw new Error("Expected keyword 'to' in extensions definition")
   var to = tokens.shift()
   if (to === 'max') to = MAX_RANGE
-  to = parseInt(to, 10)
+  to = Number(to)
   if (isNaN(to)) throw new Error('Invalid to in extensions definition')
   if (tokens.shift() !== ';') throw new Error('Missing ; in extensions definition')
   return {from: from, to: to}
@@ -186,7 +186,7 @@ var onenumvalue = function(tokens) {
   var name = tokens.shift()
   tokens.shift()
 
-  var value = parseInt(tokens.shift(), 10)
+  var value = Number(tokens.shift())
   tokens.shift()
 
   return {
@@ -249,7 +249,7 @@ var ononeof = function(tokens) {
     field.name = tokens.shift()
     if (tokens[0] !== '=') throw new Error('Expected = but found '+tokens[0])
     tokens.shift()
-    field.tag = parseInt(tokens.shift(), 10)
+    field.tag = Number(tokens.shift())
 
     oneof.fields.push(field)
     if (tokens[0] !== ';') throw new Error('Expected ; but found '+tokens[0])
