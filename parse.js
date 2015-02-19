@@ -1,35 +1,34 @@
 var tokenize = require('./tokenize')
 var MAX_RANGE = 0x1FFFFFFF
 
-var onfieldoptions = function(tokens) {
+var onfieldoptions = function (tokens) {
   var opts = {}
 
   while (tokens.length) {
-    switch(tokens[0]) {
+    switch (tokens[0]) {
       case '[':
       case ',':
-      tokens.shift()
-      var name = tokens.shift()
-      if (tokens[0] !== '=') throw new Error('Unexpected token in field options: '+tokens[0])
-      tokens.shift()
-      if (tokens[0] === ']') throw new Error('Unexpected ] in field option')
-      opts[name] = tokens.shift()
-      break
+        tokens.shift()
+        var name = tokens.shift()
+        if (tokens[0] !== '=') throw new Error('Unexpected token in field options: ' + tokens[0])
+        tokens.shift()
+        if (tokens[0] === ']') throw new Error('Unexpected ] in field option')
+        opts[name] = tokens.shift()
+        break
 
       case ']':
-      tokens.shift()
-      return opts
+        tokens.shift()
+        return opts
 
       default:
-      throw new Error('Unexpected token in field options: '+tokens[0])
+        throw new Error('Unexpected token in field options: ' + tokens[0])
     }
   }
 
   throw new Error('No closing tag for field options')
 }
 
-var onfield = function(tokens) {
-  var param = []
+var onfield = function (tokens) {
   var field = {
     name: null,
     type: null,
@@ -42,37 +41,37 @@ var onfield = function(tokens) {
   while (tokens.length) {
     switch (tokens[0]) {
       case '=':
-      tokens.shift()
-      field.tag = Number(tokens.shift())
-      break
+        tokens.shift()
+        field.tag = Number(tokens.shift())
+        break
 
       case 'repeated':
       case 'required':
       case 'optional':
-      var t = tokens.shift()
-      field.required = t === 'required'
-      field.repeated = t === 'repeated'
-      field.type = tokens.shift()
-      field.name = tokens.shift()
-      break
+        var t = tokens.shift()
+        field.required = t === 'required'
+        field.repeated = t === 'repeated'
+        field.type = tokens.shift()
+        field.name = tokens.shift()
+        break
 
       case '[':
-      field.options = onfieldoptions(tokens)
-      break
+        field.options = onfieldoptions(tokens)
+        break
 
       case ';':
-      tokens.shift()
-      return field
+        tokens.shift()
+        return field
 
       default:
-      throw new Error('Unexpected token in message field: '+tokens[0])
+        throw new Error('Unexpected token in message field: ' + tokens[0])
     }
   }
 
   throw new Error('No ; found for message field')
 }
 
-var onmessagebody = function(tokens) {
+var onmessagebody = function (tokens) {
   var body = {
     enums: [],
     messages: [],
@@ -86,34 +85,34 @@ var onmessagebody = function(tokens) {
       case 'repeated':
       case 'optional':
       case 'required':
-      body.fields.push(onfield(tokens))
-      break
+        body.fields.push(onfield(tokens))
+        break
 
       case 'enum':
-      body.enums.push(onenum(tokens))
-      break
+        body.enums.push(onenum(tokens))
+        break
 
       case 'message':
-      body.messages.push(onmessage(tokens))
-      break
+        body.messages.push(onmessage(tokens))
+        break
 
       case 'extensions':
-      body.extensions = onextensions(tokens)
-      break
+        body.extensions = onextensions(tokens)
+        break
 
       case 'oneof':
-      body.oneof.push(ononeof(tokens))
-      break
+        body.oneof.push(ononeof(tokens))
+        break
 
       default:
-      throw new Error('Unexpected token in message: '+tokens[0])
+        throw new Error('Unexpected token in message: ' + tokens[0])
     }
   }
 
   return body
 }
 
-var onextend = function(tokens) {
+var onextend = function (tokens) {
   var out = {
     name: tokens[1],
     message: onmessage(tokens)
@@ -121,7 +120,7 @@ var onextend = function(tokens) {
   return out
 }
 
-var onextensions = function(tokens) {
+var onextensions = function (tokens) {
   tokens.shift()
   var from = Number(tokens.shift())
   if (isNaN(from)) throw new Error('Invalid from in extensions definition')
@@ -133,7 +132,7 @@ var onextensions = function(tokens) {
   if (tokens.shift() !== ';') throw new Error('Missing ; in extensions definition')
   return {from: from, to: to}
 }
-var onmessage = function(tokens) {
+var onmessage = function (tokens) {
   tokens.shift()
 
   var lvl = 1
@@ -146,7 +145,7 @@ var onmessage = function(tokens) {
     fields: []
   }
 
-  if (tokens[0] !== '{') throw new Error('Expected { but found '+tokens[0])
+  if (tokens[0] !== '{') throw new Error('Expected { but found ' + tokens[0])
   tokens.shift()
 
   while (tokens.length) {
@@ -155,7 +154,7 @@ var onmessage = function(tokens) {
 
     if (!lvl) {
       tokens.shift()
-      var body = onmessagebody(body)
+      body = onmessagebody(body)
       msg.enums = body.enums
       msg.oneof = body.oneof
       msg.messages = body.messages
@@ -170,18 +169,18 @@ var onmessage = function(tokens) {
   if (lvl) throw new Error('No closing tag for message')
 }
 
-var onpackagename = function(tokens) {
+var onpackagename = function (tokens) {
   tokens.shift()
   var name = tokens.shift()
-  if (tokens[0] !== ';') throw new Error('Expected ; but found '+tokens[0])
+  if (tokens[0] !== ';') throw new Error('Expected ; but found ' + tokens[0])
   tokens.shift()
   return name
 }
 
-var onenumvalue = function(tokens) {
-  if (tokens.length < 4) throw new Error('Invalid enum value: '+tokens.slice(0, 3).join(' '))
-  if (tokens[1] !== '=') throw new Error('Expected = but found '+tokens[1])
-  if (tokens[3] !== ';') throw new Error('Expected ; but found '+tokens[1])
+var onenumvalue = function (tokens) {
+  if (tokens.length < 4) throw new Error('Invalid enum value: ' + tokens.slice(0, 3).join(' '))
+  if (tokens[1] !== '=') throw new Error('Expected = but found ' + tokens[1])
+  if (tokens[3] !== ';') throw new Error('Expected ; but found ' + tokens[1])
 
   var name = tokens.shift()
   tokens.shift()
@@ -195,7 +194,7 @@ var onenumvalue = function(tokens) {
   }
 }
 
-var onenum = function(tokens) {
+var onenum = function (tokens) {
   tokens.shift()
 
   var e = {
@@ -203,7 +202,7 @@ var onenum = function(tokens) {
     values: {}
   }
 
-  if (tokens[0] !== '{') throw new Error('Expected { but found '+tokens[0])
+  if (tokens[0] !== '{') throw new Error('Expected { but found ' + tokens[0])
   tokens.shift()
 
   while (tokens.length) {
@@ -226,7 +225,7 @@ var onenum = function(tokens) {
   throw new Error('No closing tag for enum')
 }
 
-var ononeof = function(tokens) {
+var ononeof = function (tokens) {
   tokens.shift()
 
   var oneof = {
@@ -234,7 +233,7 @@ var ononeof = function(tokens) {
     fields: []
   }
 
-  if (tokens[0] !== '{') throw new Error('Expected { but found '+tokens[0])
+  if (tokens[0] !== '{') throw new Error('Expected { but found ' + tokens[0])
   tokens.shift()
 
   while (tokens.length) {
@@ -247,65 +246,65 @@ var ononeof = function(tokens) {
 
     field.type = tokens.shift()
     field.name = tokens.shift()
-    if (tokens[0] !== '=') throw new Error('Expected = but found '+tokens[0])
+    if (tokens[0] !== '=') throw new Error('Expected = but found ' + tokens[0])
     tokens.shift()
     field.tag = Number(tokens.shift())
 
     oneof.fields.push(field)
-    if (tokens[0] !== ';') throw new Error('Expected ; but found '+tokens[0])
+    if (tokens[0] !== ';') throw new Error('Expected ; but found ' + tokens[0])
     tokens.shift()
   }
 
   throw new Error('No closing tag for oneof')
 }
 
-var onoption = function(tokens) {
+var onoption = function (tokens) {
   var name = null
   var value = null
 
-  var parse = function(value) {
+  var parse = function (value) {
     if (value === 'true') return true
     if (value === 'false') return false
-    return value.replace(/^"+|"+$/gm,'')
+    return value.replace(/^"+|"+$/gm, '')
   }
 
   while (tokens.length) {
     if (tokens[0] === ';') {
       tokens.shift()
-      return {name:name, value:value}
+      return {name: name, value: value}
     }
     switch (tokens[0]) {
       case 'option':
-      tokens.shift()
-      name = tokens.shift()
-      break
+        tokens.shift()
+        name = tokens.shift()
+        break
 
       case '=':
-      tokens.shift()
-      if (name === null) throw new Error('Expected key for option with value: '+tokens[0])
-      value = parse(tokens.shift())
-      if (name === 'optimize_for' && !/^(SPEED|CODE_SIZE|LITE_RUNTIME)$/.test(value)) {
-        throw new Error('Unexpected value for option optimize_for: '+value)
-      }
-      break
+        tokens.shift()
+        if (name === null) throw new Error('Expected key for option with value: ' + tokens[0])
+        value = parse(tokens.shift())
+        if (name === 'optimize_for' && !/^(SPEED|CODE_SIZE|LITE_RUNTIME)$/.test(value)) {
+          throw new Error('Unexpected value for option optimize_for: ' + value)
+        }
+        break
 
       default:
-      throw new Error('Unexpected token in option: '+tokens[0])
+        throw new Error('Unexpected token in option: ' + tokens[0])
     }
   }
 }
 
-var onimport = function(tokens) {
+var onimport = function (tokens) {
   tokens.shift()
-  var file = tokens.shift().replace(/^"+|"+$/gm,'')
+  var file = tokens.shift().replace(/^"+|"+$/gm, '')
 
-  if (tokens[0] !== ';') throw new Error('Unexpected token: '+tokens[0]+'. Expected ";"')
+  if (tokens[0] !== ';') throw new Error('Unexpected token: ' + tokens[0] + '. Expected ";"')
 
   tokens.shift()
   return file
 }
 
-var parse = function(buf) {
+var parse = function (buf) {
   var tokens = tokenize(buf.toString())
   var schema = {
     package: null,
@@ -319,43 +318,43 @@ var parse = function(buf) {
   while (tokens.length) {
     switch (tokens[0]) {
       case 'package':
-      schema.package = onpackagename(tokens)
-      break
+        schema.package = onpackagename(tokens)
+        break
 
       case 'message':
-      schema.messages.push(onmessage(tokens))
-      break
+        schema.messages.push(onmessage(tokens))
+        break
 
       case 'enum':
-      schema.enums.push(onenum(tokens))
-      break
+        schema.enums.push(onenum(tokens))
+        break
 
       case 'option':
-      var opt = onoption(tokens)
-      if (schema.options[opt.name]) throw new Error('Duplicate option '+opt.name)
-      schema.options[opt.name] = opt.value
-      break
+        var opt = onoption(tokens)
+        if (schema.options[opt.name]) throw new Error('Duplicate option ' + opt.name)
+        schema.options[opt.name] = opt.value
+        break
 
       case 'import':
-      schema.imports.push(onimport(tokens))
-      break
+        schema.imports.push(onimport(tokens))
+        break
 
       case 'extend':
-      schema.extends.push(onextend(tokens))
-      break
+        schema.extends.push(onextend(tokens))
+        break
 
       default:
-      throw new Error('Unexpected token: '+tokens[0])
+        throw new Error('Unexpected token: ' + tokens[0])
     }
   }
 
-  //now iterate over messages and propagate extends
-  schema.extends.forEach(function(ext) {
-    schema.messages.forEach(function(msg) {
+  // now iterate over messages and propagate extends
+  schema.extends.forEach(function (ext) {
+    schema.messages.forEach(function (msg) {
       if (msg.name === ext.name) {
-        ext.message.fields.forEach(function(field) {
+        ext.message.fields.forEach(function (field) {
           if (!msg.extensions || field.tag < msg.extensions.from || field.tag > msg.extensions.to) {
-            throw new Error(msg.name+" does not declare "+field.tag+" as an extension number")
+            throw new Error(msg.name + ' does not declare ' + field.tag + ' as an extension number')
           }
           msg.fields.push(field)
         })

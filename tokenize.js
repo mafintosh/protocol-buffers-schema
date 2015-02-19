@@ -1,12 +1,12 @@
-module.exports = function(sch) {
-  var noComments = function(line) {
+module.exports = function (sch) {
+  var noComments = function (line) {
     var i = line.indexOf('//')
     return i > -1 ? line.slice(0, i) : line
   }
 
-  var noMultilineComments = function() {
+  var noMultilineComments = function () {
     var inside = false
-    return function(token) {
+    return function (token) {
       if (token === '/*') {
         inside = true
         return false
@@ -19,7 +19,7 @@ module.exports = function(sch) {
     }
   }
 
-  var trim = function(line) {
+  var trim = function (line) {
     return line.trim()
   }
 

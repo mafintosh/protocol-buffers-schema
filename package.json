@@ -4,7 +4,7 @@
   "description": "No nonsense protobuf schema parser written in Javascript",
   "main": "index.js",
   "scripts": {
-    "test": "tape test/*.js"
+    "test": "standard && tape test/*.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/mafintosh/protobuf-schema",
   "devDependencies": {
+    "standard": "^2.6.5",
     "tape": "^2.13.4"
   }
 }
