@@ -104,6 +104,10 @@ var onmessagebody = function (tokens) {
         body.oneof.push(ononeof(tokens))
         break
 
+      case ';':
+        tokens.shift()
+        break
+
       default:
         throw new Error('Unexpected token in message: ' + tokens[0])
     }
