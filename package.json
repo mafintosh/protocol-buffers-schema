@@ -1,6 +1,6 @@
 {
   "name": "protobuf-schema",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "No nonsense protobuf schema parser written in Javascript",
   "main": "index.js",
   "scripts": {
