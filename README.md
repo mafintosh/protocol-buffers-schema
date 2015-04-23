@@ -1,18 +1,18 @@
-# protobuf-schema
+# protocol-buffers-schema
 
-No nonsense [protobuf](https://code.google.com/p/protobuf/) schema parser written in Javascript
+No nonsense [protocol buffers](https://developers.google.com/protocol-buffers) schema parser written in Javascript
 
 ``` js
-npm install protobuf-schema
+npm install protocol-buffers-schema
 ```
 
-[![build status](http://img.shields.io/travis/mafintosh/protobuf-schema.svg?style=flat)](http://travis-ci.org/mafintosh/protobuf-schema)
+[![build status](http://img.shields.io/travis/mafintosh/protocol-buffers-schema.svg?style=flat)](http://travis-ci.org/mafintosh/protocol-buffers-schema)
 
 ## Usage
 
 First save the following file as `example.proto`
 
-```
+```proto
 message Point {
   required int32 x = 1;
   required int32 y=2;
@@ -30,7 +30,7 @@ The run the following example
 
 ``` js
 var fs = require('fs')
-var schema = require('protobuf-schema')
+var schema = require('protocol-buffers-schema')
 
 // pass a buffer or string to schema.parse
 var sch = schema.parse(fs.readFileSync('example.proto'))
