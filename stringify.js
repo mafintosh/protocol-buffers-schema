@@ -1,5 +1,6 @@
 var onfield = function (f, result) {
   var prefix = f.repeated ? 'repeated' : f.required ? 'required' : 'optional'
+  if (f.map) prefix = 'map<' + f.map.join(',') + '>'
 
   var opts = Object.keys(f.options || {}).map(function (key) {
     return key + ' = ' + f.options[key]
@@ -7,7 +8,7 @@ var onfield = function (f, result) {
 
   if (opts) opts = ' [' + opts + ']'
 
-  result.push(prefix + ' ' + f.type + ' ' + f.name + ' = ' + f.tag + opts + ';')
+  result.push(prefix + ' ' + (f.type === 'map' ? '' : f.type + ' ') + f.name + ' = ' + f.tag + opts + ';')
   return result
 }
 

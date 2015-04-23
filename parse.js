@@ -33,6 +33,7 @@ var onfield = function (tokens) {
     name: null,
     type: null,
     tag: 0,
+    map: null,
     required: false,
     repeated: false,
     options: {}
@@ -43,6 +44,21 @@ var onfield = function (tokens) {
       case '=':
         tokens.shift()
         field.tag = Number(tokens.shift())
+        break
+
+      case 'map':
+        field.type = 'map'
+        field.map = {from: null, to: null}
+        tokens.shift()
+        if (tokens[0] !== '<') throw new Error('Unexpected token in map type: ' + tokens[0])
+        tokens.shift()
+        field.map.from = tokens.shift()
+        if (tokens[0] !== ',') throw new Error('Unexpected token in map type: ' + tokens[0])
+        tokens.shift()
+        field.map.to = tokens.shift()
+        if (tokens[0] !== '>') throw new Error('Unexpected token in map type: ' + tokens[0])
+        tokens.shift()
+        field.name = tokens.shift()
         break
 
       case 'repeated':
@@ -82,6 +98,7 @@ var onmessagebody = function (tokens) {
 
   while (tokens.length) {
     switch (tokens[0]) {
+      case 'map':
       case 'repeated':
       case 'optional':
       case 'required':
