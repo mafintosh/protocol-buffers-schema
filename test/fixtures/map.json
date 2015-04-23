@@ -6,7 +6,6 @@
     {
       "name": "Data",
       "enums": [],
-      "oneof": [],
       "messages": [],
       "fields": [
         {
@@ -16,6 +15,7 @@
             "from": "string",
             "to": "bytes"
           },
+          "oneof": null,
           "tag": 1,
           "required": false,
           "repeated": false,

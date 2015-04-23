@@ -1,6 +1,7 @@
 var onfield = function (f, result) {
   var prefix = f.repeated ? 'repeated' : f.required ? 'required' : 'optional'
-  if (f.map) prefix = 'map<' + f.map.join(',') + '>'
+  if (f.map) prefix = 'map<' + f.map.from + ',' + f.map.to + '>'
+  if (f.oneof) prefix = ''
 
   var opts = Object.keys(f.options || {}).map(function (key) {
     return key + ' = ' + f.options[key]
@@ -8,7 +9,7 @@ var onfield = function (f, result) {
 
   if (opts) opts = ' [' + opts + ']'
 
-  result.push(prefix + ' ' + (f.type === 'map' ? '' : f.type + ' ') + f.name + ' = ' + f.tag + opts + ';')
+  result.push((prefix ? prefix + ' ' : '') + (f.type === 'map' ? '' : f.type + ' ') + f.name + ' = ' + f.tag + opts + ';')
   return result
 }
 
@@ -25,9 +26,22 @@ var onmessage = function (m, result) {
     result.push(onmessage(m, []))
   })
 
+  var oneofs = {}
+
   if (!m.fields) m.fields = []
   m.fields.forEach(function (f) {
-    result.push(onfield(f, []))
+    if (f.oneof) {
+      if (!oneofs[f.oneof]) oneofs[f.oneof] = []
+      oneofs[f.oneof].push(onfield(f, []))
+    } else {
+      result.push(onfield(f, []))
+    }
+  })
+
+  Object.keys(oneofs).forEach(function (n) {
+    oneofs[n].unshift('oneof ' + n + ' {')
+    oneofs[n].push('}')
+    result.push(oneofs[n])
   })
 
   result.push('}', '')

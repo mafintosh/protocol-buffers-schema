@@ -8,7 +8,6 @@
 			"name": "SearchResponse",
 			"extensions": null,
 			"enums": [],
-			"oneof": [],
 			"messages": [],
 			"fields": [
 				{
@@ -16,6 +15,7 @@
 					"type": "Result",
 					"tag": 1,
 					"map": null,
+					"oneof": null,
 					"required": false,
 					"repeated": true,
 					"options": {}

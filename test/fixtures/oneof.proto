@@ -1,8 +1,6 @@
-message Data {
-  oneof type {
-    string string = 1;
-    float float = 2;
-    bool null = 3;
+message SampleMessage {
+  oneof test_oneof {
+     string name = 4;
+     SubMessage sub_message = 9;
   }
-  optional type value = 1;
 }

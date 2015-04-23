@@ -7,7 +7,6 @@
     {
       "name": "Point",
       "enums": [],
-      "oneof": [],
       "messages": [],
       "extensions": null,
       "fields": [
@@ -16,6 +15,7 @@
           "type": "int32",
           "tag": 1,
           "map": null,
+          "oneof": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -25,6 +25,7 @@
           "type": "int32",
           "tag": 2,
           "map": null,
+          "oneof": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -34,6 +35,7 @@
           "type": "string",
           "tag": 3,
           "map": null,
+          "oneof": null,
           "required": false,
           "repeated": false,
           "options": {}
@@ -43,7 +45,6 @@
     {
       "name": "Line",
       "enums": [],
-      "oneof": [],
       "extensions": null,
       "messages": [],
       "fields": [
@@ -52,6 +53,7 @@
           "type": "Point",
           "tag": 1,
           "map": null,
+          "oneof": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -61,6 +63,7 @@
           "type": "Point",
           "tag": 2,
           "map": null,
+          "oneof": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -70,6 +73,7 @@
           "type": "string",
           "tag": 3,
           "map": null,
+          "oneof": null,
           "required": false,
           "repeated": false,
           "options": {}

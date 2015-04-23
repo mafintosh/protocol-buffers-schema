@@ -17,12 +17,10 @@
           }
         }
       ],
-      "oneof": [],
       "messages": [
         {
           "name": "PhoneNumber",
           "enums": [],
-          "oneof": [],
           "messages": [],
           "extensions": null,
           "fields": [
@@ -31,6 +29,7 @@
               "type": "string",
               "tag": 1,
               "map": null,
+              "oneof": null,
               "required": true,
               "repeated": false,
               "options": {}
@@ -40,6 +39,7 @@
               "type": "PhoneType",
               "tag": 2,
               "map": null,
+              "oneof": null,
               "required": false,
               "repeated": false,
               "options": {
@@ -55,6 +55,7 @@
           "type": "string",
           "tag": 1,
           "map": null,
+          "oneof": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -64,6 +65,7 @@
           "type": "int32",
           "tag": 2,
           "map": null,
+          "oneof": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -73,6 +75,7 @@
           "type": "string",
           "tag": 3,
           "map": null,
+          "oneof": null,
           "required": false,
           "repeated": false,
           "options": {}
@@ -82,6 +85,7 @@
           "type": "PhoneNumber",
           "tag": 4,
           "map": null,
+          "oneof": null,
           "required": false,
           "repeated": true,
           "options": {}
@@ -91,7 +95,6 @@
     {
       "name": "AddressBook",
       "enums": [],
-      "oneof": [],
       "messages": [],
       "extensions": null,
       "fields": [
@@ -100,6 +103,7 @@
           "type": "Person",
           "tag": 1,
           "map": null,
+          "oneof": null,
           "required": false,
           "repeated": true,
           "options": {}

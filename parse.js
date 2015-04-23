@@ -34,6 +34,7 @@ var onfield = function (tokens) {
     type: null,
     tag: 0,
     map: null,
+    oneof: null,
     required: false,
     repeated: false,
     options: {}
@@ -92,7 +93,6 @@ var onmessagebody = function (tokens) {
     enums: [],
     messages: [],
     fields: [],
-    oneof: [],
     extensions: null
   }
 
@@ -118,7 +118,17 @@ var onmessagebody = function (tokens) {
         break
 
       case 'oneof':
-        body.oneof.push(ononeof(tokens))
+        tokens.shift()
+        var name = tokens.shift()
+        if (tokens[0] !== '{') throw new Error('Unexpected token in oneof: ' + tokens[0])
+        tokens.shift()
+        while (tokens[0] !== '}') {
+          tokens.unshift('optional')
+          var field = onfield(tokens)
+          field.oneof = name
+          body.fields.push(field)
+        }
+        tokens.shift()
         break
 
       case ';':
@@ -161,7 +171,6 @@ var onmessage = function (tokens) {
   var msg = {
     name: tokens.shift(),
     enums: [],
-    oneof: [],
     messages: [],
     fields: []
   }
@@ -177,7 +186,6 @@ var onmessage = function (tokens) {
       tokens.shift()
       body = onmessagebody(body)
       msg.enums = body.enums
-      msg.oneof = body.oneof
       msg.messages = body.messages
       msg.fields = body.fields
       msg.extensions = body.extensions
@@ -244,39 +252,6 @@ var onenum = function (tokens) {
   }
 
   throw new Error('No closing tag for enum')
-}
-
-var ononeof = function (tokens) {
-  tokens.shift()
-
-  var oneof = {
-    name: tokens.shift(),
-    fields: []
-  }
-
-  if (tokens[0] !== '{') throw new Error('Expected { but found ' + tokens[0])
-  tokens.shift()
-
-  while (tokens.length) {
-    if (tokens[0] === '}') {
-      tokens.shift()
-      return oneof
-    }
-
-    var field = {}
-
-    field.type = tokens.shift()
-    field.name = tokens.shift()
-    if (tokens[0] !== '=') throw new Error('Expected = but found ' + tokens[0])
-    tokens.shift()
-    field.tag = Number(tokens.shift())
-
-    oneof.fields.push(field)
-    if (tokens[0] !== ';') throw new Error('Expected ; but found ' + tokens[0])
-    tokens.shift()
-  }
-
-  throw new Error('No closing tag for oneof')
 }
 
 var onoption = function (tokens) {
