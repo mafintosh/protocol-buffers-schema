@@ -34,6 +34,7 @@
           "name": "value",
           "type": "type",
           "tag": 1,
+          "map": null,
           "required": false,
           "repeated": false,
           "options": {}

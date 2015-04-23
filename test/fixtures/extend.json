@@ -13,6 +13,7 @@
           "name": "field1",
           "type": "int32",
           "tag": 1,
+          "map": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -21,6 +22,7 @@
           "name": "field2",
           "type": "string",
           "tag": 2,
+          "map": null,
           "required": false,
           "repeated": false,
           "options": {}
@@ -29,6 +31,7 @@
           "name": "field3",
           "type": "int32",
           "tag": 3,
+          "map": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -37,6 +40,7 @@
           "name": "exField1",
           "type": "int32",
           "tag": 101,
+          "map": null,
           "required": false,
           "repeated": false,
           "options": {}
@@ -45,6 +49,7 @@
           "name": "exField2",
           "type": "string",
           "tag": 102,
+          "map": null,
           "required": false,
           "repeated": false,
           "options": {}
@@ -62,6 +67,7 @@
           "name": "field1",
           "type": "int32",
           "tag": 1,
+          "map": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -70,6 +76,7 @@
           "name": "field2",
           "type": "string",
           "tag": 2,
+          "map": null,
           "required": false,
           "repeated": false,
           "options": {}
@@ -78,6 +85,7 @@
           "name": "field3",
           "type": "int32",
           "tag": 3,
+          "map": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -86,6 +94,7 @@
           "name": "exField1",
           "type": "int32",
           "tag": 101,
+          "map": null,
           "required": false,
           "repeated": false,
           "options": {}
@@ -94,6 +103,7 @@
           "name": "exField2",
           "type": "string",
           "tag": 102,
+          "map": null,
           "required": false,
           "repeated": false,
           "options": {}
@@ -119,6 +129,7 @@
             "name": "exField1",
             "type": "int32",
             "tag": 101,
+            "map": null,
             "required": false,
             "repeated": false,
             "options": {}
@@ -127,6 +138,7 @@
             "name": "exField2",
             "type": "string",
             "tag": 102,
+            "map": null,
             "required": false,
             "repeated": false,
             "options": {}

@@ -15,6 +15,7 @@
           "name": "x",
           "type": "int32",
           "tag": 1,
+          "map": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -23,6 +24,7 @@
           "name": "y",
           "type": "int32",
           "tag": 2,
+          "map": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -31,6 +33,7 @@
           "name": "label",
           "type": "string",
           "tag": 3,
+          "map": null,
           "required": false,
           "repeated": false,
           "options": {}
@@ -48,6 +51,7 @@
           "name": "start",
           "type": "Point",
           "tag": 1,
+          "map": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -56,6 +60,7 @@
           "name": "end",
           "type": "Point",
           "tag": 2,
+          "map": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -64,6 +69,7 @@
           "name": "label",
           "type": "string",
           "tag": 3,
+          "map": null,
           "required": false,
           "repeated": false,
           "options": {}

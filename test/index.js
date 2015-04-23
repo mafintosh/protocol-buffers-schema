@@ -71,3 +71,8 @@ tape('schema with oneof', function (t) {
   t.same(schema.parse(fixture('oneof.proto')), require('./fixtures/oneof.json'))
   t.end()
 })
+
+tape('schema with map', function (t) {
+  t.same(schema.parse(fixture('map.proto')), require('./fixtures/map.json'))
+  t.end()
+})

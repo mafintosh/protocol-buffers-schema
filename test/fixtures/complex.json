@@ -30,6 +30,7 @@
               "name": "number",
               "type": "string",
               "tag": 1,
+              "map": null,
               "required": true,
               "repeated": false,
               "options": {}
@@ -38,6 +39,7 @@
               "name": "type",
               "type": "PhoneType",
               "tag": 2,
+              "map": null,
               "required": false,
               "repeated": false,
               "options": {
@@ -52,6 +54,7 @@
           "name": "name",
           "type": "string",
           "tag": 1,
+          "map": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -60,6 +63,7 @@
           "name": "id",
           "type": "int32",
           "tag": 2,
+          "map": null,
           "required": true,
           "repeated": false,
           "options": {}
@@ -68,6 +72,7 @@
           "name": "email",
           "type": "string",
           "tag": 3,
+          "map": null,
           "required": false,
           "repeated": false,
           "options": {}
@@ -76,6 +81,7 @@
           "name": "phone",
           "type": "PhoneNumber",
           "tag": 4,
+          "map": null,
           "required": false,
           "repeated": true,
           "options": {}
@@ -93,6 +99,7 @@
           "name": "person",
           "type": "Person",
           "tag": 1,
+          "map": null,
           "required": false,
           "repeated": true,
           "options": {}

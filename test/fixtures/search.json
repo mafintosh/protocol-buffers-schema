@@ -1,20 +1,27 @@
 {
-	"package":null,
+	"package": null,
 	"imports": ["./result.proto"],
-	"enums":[],
+	"enums": [],
 	"extends": [],
-	"messages":[{
-		"name":"SearchResponse",
-		"extensions": null,
-		"enums":[],
-		"oneof": [],
-		"messages":[],
-		"fields":[
-			{
-				"name":"result","type":"Result","tag":1,"required":false,"repeated":true,"options":{}
-
-			}
-		]
-	}],
+	"messages": [
+		{
+			"name": "SearchResponse",
+			"extensions": null,
+			"enums": [],
+			"oneof": [],
+			"messages": [],
+			"fields": [
+				{
+					"name": "result",
+					"type": "Result",
+					"tag": 1,
+					"map": null,
+					"required": false,
+					"repeated": true,
+					"options": {}
+				}
+			]
+		}
+	],
 	"options":{}
 }
