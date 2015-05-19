@@ -13,7 +13,8 @@ tape('basic parse', function (t) {
 })
 
 tape('basic parse + stringify', function (t) {
-  t.same(schema.stringify(schema.parse(fixture('basic.proto'))), fixture('basic.proto'))
+  var syntax = 'syntax = "proto3";\n\n'
+  t.same(schema.stringify(schema.parse(fixture('basic.proto'))), syntax + fixture('basic.proto'))
   t.end()
 })
 
@@ -23,7 +24,8 @@ tape('complex parse', function (t) {
 })
 
 tape('complex parse + stringify', function (t) {
-  t.same(schema.stringify(schema.parse(fixture('complex.proto'))), fixture('complex.proto'))
+  var syntax = 'syntax = "proto3";\n\n'
+  t.same(schema.stringify(schema.parse(fixture('complex.proto'))), syntax + fixture('complex.proto'))
   t.end()
 })
 
@@ -75,4 +77,18 @@ tape('schema with oneof', function (t) {
 tape('schema with map', function (t) {
   t.same(schema.parse(fixture('map.proto')), require('./fixtures/map.json'))
   t.end()
+})
+
+tape('schema with syntax version', function (t) {
+  t.same(schema.parse(fixture('version.proto')), require('./fixtures/version.json'))
+  t.end()
+})
+
+tape('throws on misplaced syntax version', function (t) {
+  t.plan(1)
+  try {
+    schema.parse('message Foo { required int32 a = 1; }\n syntax = "proto3"')
+  } catch (err) {
+    t.ok(true, 'should fail')
+  }
 })

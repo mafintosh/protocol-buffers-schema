@@ -81,6 +81,9 @@ var indent = function (lvl) {
 
 module.exports = function (schema) {
   var result = []
+
+  result.push('syntax = "proto' + schema.syntax + '";', '')
+
   if (schema.package) result.push('package ' + schema.package + ';', '')
 
   if (!schema.options) schema.options = {}

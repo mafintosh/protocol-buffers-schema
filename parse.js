@@ -206,6 +206,32 @@ var onpackagename = function (tokens) {
   return name
 }
 
+var onsyntaxversion = function (tokens) {
+  tokens.shift()
+
+  if (tokens[0] !== '=') throw new Error('Expected = but found ' + tokens[0])
+  tokens.shift()
+
+  var version = tokens.shift()
+  switch (version) {
+    case '"proto2"':
+      version = 2
+      break
+
+    case '"proto3"':
+      version = 3
+      break
+
+    default:
+      throw new Error('Expected protobuf syntax version but found ' + version)
+  }
+
+  if (tokens[0] !== ';') throw new Error('Expected ; but found ' + tokens[0])
+  tokens.shift()
+
+  return version
+}
+
 var onenumvalue = function (tokens) {
   if (tokens.length < 4) throw new Error('Invalid enum value: ' + tokens.slice(0, 3).join(' '))
   if (tokens[1] !== '=') throw new Error('Expected = but found ' + tokens[1])
@@ -303,6 +329,7 @@ var onimport = function (tokens) {
 var parse = function (buf) {
   var tokens = tokenize(buf.toString())
   var schema = {
+    syntax: 3,
     package: null,
     imports: [],
     enums: [],
@@ -311,10 +338,17 @@ var parse = function (buf) {
     extends: []
   }
 
+  var firstline = true
+
   while (tokens.length) {
     switch (tokens[0]) {
       case 'package':
         schema.package = onpackagename(tokens)
+        break
+
+      case 'syntax':
+        if (!firstline) throw new Error('Protobuf syntax version should be first thing in file')
+        schema.syntax = onsyntaxversion(tokens)
         break
 
       case 'message':
@@ -342,6 +376,7 @@ var parse = function (buf) {
       default:
         throw new Error('Unexpected token: ' + tokens[0])
     }
+    firstline = false
   }
 
   // now iterate over messages and propagate extends
