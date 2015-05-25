@@ -1,4 +1,5 @@
 {
+	"syntax": 3,
 	"package": null,
 	"imports": ["./result.proto"],
 	"enums": [],

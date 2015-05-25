@@ -1,4 +1,5 @@
 {
+  "syntax": 3,
   "package": "tutorial",
   "imports": [],
   "enums": [],

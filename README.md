@@ -13,6 +13,8 @@ npm install protocol-buffers-schema
 First save the following file as `example.proto`
 
 ```proto
+syntax = "proto2";
+
 message Point {
   required int32 x = 1;
   required int32 y=2;
@@ -43,6 +45,7 @@ Running the above example will print something like
 
 ``` js
 {
+  syntax: 2,
   package: null,
   enums: [],
   messages: [{
