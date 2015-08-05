@@ -356,7 +356,7 @@ var parse = function (buf) {
     messages: [],
     options: {},
     extends: [],
-    services: []
+    service: null
   }
 
   var firstline = true
@@ -395,9 +395,9 @@ var parse = function (buf) {
         break
 
       case 'service':
-        schema.services.push(onservice(tokens))
+        schema.service = onservice(tokens)
         break
-        
+
       default:
         throw new Error('Unexpected token: ' + tokens[0])
     }
