@@ -80,6 +80,13 @@
           "options": {}
         }
       ]
+    },
+    {
+      "name": "A",
+      "enums": [],
+      "messages": [],
+      "fields": [],
+      "extensions": null
     }
   ],
   "options":{}

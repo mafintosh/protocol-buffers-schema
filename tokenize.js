@@ -29,6 +29,7 @@ module.exports = function (sch) {
     .map(trim)
     .filter(Boolean)
     .map(noComments)
+    .map(trim)
     .filter(Boolean)
     .join('\n')
     .split(/\s+|\n+/gm)

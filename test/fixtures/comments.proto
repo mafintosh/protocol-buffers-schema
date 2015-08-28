@@ -15,3 +15,5 @@ message Line {/*
 /**
  * Doxygen-style comment
  **/
+message A {
+}//Comment after closing brace of last message
