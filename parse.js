@@ -15,7 +15,6 @@ var onfieldoptions = function (tokens) {
         if (tokens[0] === ']') throw new Error('Unexpected ] in field option')
         opts[name] = tokens.shift()
         break
-
       case ']':
         tokens.shift()
         return opts
@@ -328,6 +327,25 @@ var onimport = function (tokens) {
 
 var parse = function (buf) {
   var tokens = tokenize(buf.toString())
+  // check for isolated strings in tokens by looking for opening quote
+  for (var i = 0; i < tokens.length; i++) {
+    if (/^(\"|\')([^\'\"]*)$/.test(tokens[i])) {
+      var j
+      if (tokens[i].length === 1) {
+        j = i + 1
+      } else {
+        j = i
+      }
+      // look ahead for the closing quote and collapse all
+      // in-between tokens into a single token
+      for (j; j < tokens.length; j++) {
+        if (/^([^\'\"]*)(\"|\')$/.test(tokens[j])) {
+          tokens = tokens.slice(0, i).concat(tokens.slice(i, j + 1).join('')).concat(tokens.slice(j + 1))
+          break
+        }
+      }
+    }
+  }
   var schema = {
     syntax: 3,
     package: null,

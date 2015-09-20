@@ -92,3 +92,8 @@ tape('throws on misplaced syntax version', function (t) {
     t.ok(true, 'should fail')
   }
 })
+
+tape('schema with reserved characters in options', function (t) {
+  t.same(schema.parse(fixture('options.proto')), require('./fixtures/options.json'))
+  t.end()
+})
