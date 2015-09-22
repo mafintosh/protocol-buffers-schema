@@ -325,6 +325,26 @@ var onimport = function (tokens) {
   return file
 }
 
+var onservice = function (tokens) {
+  tokens.shift()
+  var ser = {
+    name: tokens.shift(),//service那么。
+    services: [],
+  }
+  if (tokens[0] !== '{') throw new Error('Expected { but found ' + tokens[0])
+  while (tokens.length) {
+      switch(tokens[0]){
+        case 'rpc':
+          ser.services.push(tokens[1]);
+          break;
+        default:
+          break;
+      }
+      tokens.shift()
+    }
+  return ser;
+}
+
 var parse = function (buf) {
   var tokens = tokenize(buf.toString())
   // check for isolated strings in tokens by looking for opening quote
@@ -353,7 +373,8 @@ var parse = function (buf) {
     enums: [],
     messages: [],
     options: {},
-    extends: []
+    extends: [],
+    service: null
   }
 
   var firstline = true
@@ -389,6 +410,10 @@ var parse = function (buf) {
 
       case 'extend':
         schema.extends.push(onextend(tokens))
+        break
+
+      case 'service':
+        schema.service = onservice(tokens)
         break
 
       default:
