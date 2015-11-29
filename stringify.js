@@ -110,6 +110,39 @@ var onoption_map = function (o, result) {
   return result
 }
 
+var onservices = function (s, result) {
+  result.push('service ' + s.name + ' {')
+
+  if (!s.options) s.options = {}
+
+  onoption(s.options, result)
+
+  if (!s.methods) s.methods = []
+  s.methods.forEach(function (m) {
+    result.push(onrpc(m, []))
+  })
+
+  result.push('}', '')
+  return result
+}
+
+var onrpc = function (rpc, result) {
+  var def = 'rpc ' + rpc.name + '('
+  if (rpc.client_streaming) def += 'stream '
+  def += rpc.input_type + ') returns ('
+  if (rpc.server_streaming) def += 'stream '
+  def += rpc.output_type + ')'
+
+  if (!rpc.options) rpc.options = {}
+
+  var options = onoption(rpc.options, [])
+  if (options.length > 1) {
+    result.push(def + ' {', options.slice(0, -1), '}')
+  } else {
+    result.push(def + ';')
+  }
+
+  return result
 }
 
 var indent = function (lvl) {
@@ -139,6 +172,12 @@ module.exports = function (schema) {
   schema.messages.forEach(function (m) {
     onmessage(m, result)
   })
+
+  if (schema.services) {
+    schema.services.forEach(function (s) {
+      onservices(s, result)
+    })
+  }
 
   return result.map(indent('')).join('\n')
 }

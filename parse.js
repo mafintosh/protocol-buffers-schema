@@ -398,6 +398,112 @@ var onimport = function (tokens) {
   return file
 }
 
+var onservice = function (tokens) {
+  tokens.shift()
+
+  var service = {
+    name: tokens.shift(),
+    methods: [],
+    options: {}
+  }
+
+  if (tokens[0] !== '{') throw new Error('Expected { but found ' + tokens[0])
+  tokens.shift()
+
+  while (tokens.length) {
+    if (tokens[0] === '}') {
+      tokens.shift()
+      // there goes optional semicolon after the enclosing "}"
+      if (tokens[0] === ';') tokens.shift()
+      return service
+    }
+
+    switch (tokens[0]) {
+      case 'option':
+        var opt = onoption(tokens)
+        if (service.options[opt.name] !== undefined) throw new Error('Duplicate option ' + opt.name)
+        service.options[opt.name] = opt.value
+        break
+      case 'rpc':
+        service.methods.push(onrpc(tokens))
+        break
+      default:
+        throw new Error('Unexpected token in service: ' + tokens[0])
+    }
+  }
+
+  throw new Error('No closing tag for service')
+}
+
+var onrpc = function (tokens) {
+  tokens.shift()
+
+  var rpc = {
+    name: tokens.shift(),
+    input_type: null,
+    output_type: null,
+    client_streaming: false,
+    server_streaming: false,
+    options: {}
+  }
+
+  if (tokens[0] !== '(') throw new Error('Expected ( but found ' + tokens[0])
+  tokens.shift()
+
+  if (tokens[0] === 'stream') {
+    tokens.shift()
+    rpc.client_streaming = true
+  }
+
+  rpc.input_type = tokens.shift()
+
+  if (tokens[0] !== ')') throw new Error('Expected ) but found ' + tokens[0])
+  tokens.shift()
+
+  if (tokens[0] !== 'returns') throw new Error('Expected returns but found ' + tokens[0])
+  tokens.shift()
+
+  if (tokens[0] !== '(') throw new Error('Expected ( but found ' + tokens[0])
+  tokens.shift()
+
+  if (tokens[0] === 'stream') {
+    tokens.shift()
+    rpc.server_streaming = true
+  }
+
+  rpc.output_type = tokens.shift()
+
+  if (tokens[0] !== ')') throw new Error('Expected ) but found ' + tokens[0])
+  tokens.shift()
+
+  if (tokens[0] === ';') {
+    tokens.shift()
+    return rpc
+  }
+
+  if (tokens[0] !== '{') throw new Error('Expected { but found ' + tokens[0])
+  tokens.shift()
+
+  while (tokens.length) {
+    if (tokens[0] === '}') {
+      tokens.shift()
+      // there goes optional semicolon after the enclosing "}"
+      if (tokens[0] === ';') tokens.shift()
+      return rpc
+    }
+
+    if (tokens[0] === 'option') {
+      var opt = onoption(tokens)
+      if (rpc.options[opt.name] !== undefined) throw new Error('Duplicate option ' + opt.name)
+      rpc.options[opt.name] = opt.value
+    } else {
+      throw new Error('Unexpected token in rpc options: ' + tokens[0])
+    }
+  }
+
+  throw new Error('No closing tag for rpc')
+}
+
 var parse = function (buf) {
   var tokens = tokenize(buf.toString())
   // check for isolated strings in tokens by looking for opening quote
@@ -462,6 +568,11 @@ var parse = function (buf) {
 
       case 'extend':
         schema.extends.push(onextend(tokens))
+        break
+
+      case 'service':
+        if (!schema.services) schema.services = []
+        schema.services.push(onservice(tokens))
         break
 
       default:

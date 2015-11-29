@@ -97,3 +97,14 @@ tape('schema with reserved characters in options', function (t) {
   t.same(schema.parse(fixture('options.proto')), require('./fixtures/options.json'))
   t.end()
 })
+
+tape('service parse', function (t) {
+  t.same(schema.parse(fixture('service.proto')), require('./fixtures/service.json'))
+  t.end()
+})
+
+tape('service parse + stringify', function (t) {
+  var syntax = 'syntax = "proto3";\n\n'
+  t.same(schema.stringify(schema.parse(fixture('service.proto'))), syntax + fixture('service.proto'))
+  t.end()
+})
