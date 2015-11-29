@@ -318,7 +318,7 @@ var onoption = function (tokens) {
           throw new Error('Unexpected value for option optimize_for: ' + value)
         } else if (value === '{') {
           // option foo = {bar: baz}
-          value = onoption_map(tokens)
+          value = onoptionMap(tokens)
         }
         break
 
@@ -328,7 +328,7 @@ var onoption = function (tokens) {
   }
 }
 
-var onoption_map = function (tokens) {
+var onoptionMap = function (tokens) {
   var parse = function (value) {
     if (value === 'true') return true
     if (value === 'false') return false
@@ -364,7 +364,7 @@ var onoption_map = function (tokens) {
 
         if (value === '{') {
           // option foo = {bar: baz}
-          value = onoption_map(tokens)
+          value = onoptionMap(tokens)
         }
 
         map[key] = value
@@ -372,7 +372,7 @@ var onoption_map = function (tokens) {
 
       case '{':
         tokens.shift()
-        value = onoption_map(tokens)
+        value = onoptionMap(tokens)
 
         if (map[key] === undefined) map[key] = []
         if (!Array.isArray(map[key])) throw new Error('Duplicate option map key ' + key)
