@@ -297,15 +297,28 @@ var onoption = function (tokens) {
     switch (tokens[0]) {
       case 'option':
         tokens.shift()
+
+        var hasBracket = tokens[0] === '('
+        if (hasBracket) tokens.shift()
+
         name = tokens.shift()
+
+        if (hasBracket) {
+          if (tokens[0] !== ')') throw new Error('Expected ) but found ' + tokens[0])
+          tokens.shift()
+        }
         break
 
       case '=':
         tokens.shift()
         if (name === null) throw new Error('Expected key for option with value: ' + tokens[0])
         value = parse(tokens.shift())
+
         if (name === 'optimize_for' && !/^(SPEED|CODE_SIZE|LITE_RUNTIME)$/.test(value)) {
           throw new Error('Unexpected value for option optimize_for: ' + value)
+        } else if (value === '{') {
+          // option foo = {bar: baz}
+          value = onoption_map(tokens)
         }
         break
 
@@ -313,6 +326,66 @@ var onoption = function (tokens) {
         throw new Error('Unexpected token in option: ' + tokens[0])
     }
   }
+}
+
+var onoption_map = function (tokens) {
+  var parse = function (value) {
+    if (value === 'true') return true
+    if (value === 'false') return false
+    return value.replace(/^"+|"+$/gm, '')
+  }
+
+  var map = {}
+
+  while (tokens.length) {
+    if (tokens[0] === '}') {
+      tokens.shift()
+      return map
+    }
+
+    var hasBracket = tokens[0] === '('
+    if (hasBracket) tokens.shift()
+
+    var key = tokens.shift()
+    if (hasBracket) {
+      if (tokens[0] !== ')') throw new Error('Expected ) but found ' + tokens[0])
+      tokens.shift()
+    }
+
+    var value = null
+
+    switch (tokens[0]) {
+      case ':':
+        if (map[key] !== undefined) throw new Error('Duplicate option map key ' + key)
+
+        tokens.shift()
+
+        value = parse(tokens.shift())
+
+        if (value === '{') {
+          // option foo = {bar: baz}
+          value = onoption_map(tokens)
+        }
+
+        map[key] = value
+        break
+
+      case '{':
+        tokens.shift()
+        value = onoption_map(tokens)
+
+        if (map[key] === undefined) map[key] = []
+        if (!Array.isArray(map[key])) throw new Error('Duplicate option map key ' + key)
+
+        map[key].push(value)
+        break
+
+      default:
+        throw new Error('Unexpected token in option map: ' + tokens[0])
+    }
+  }
+
+  throw new Error('No closing tag for option map')
 }
 
 var onimport = function (tokens) {

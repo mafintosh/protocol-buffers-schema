@@ -64,12 +64,52 @@ var onoption = function (o, result) {
   var keys = Object.keys(o)
   keys.forEach(function (option) {
     var v = o[option]
-    if (typeof v === 'string' && option !== 'optimize_for') v = '"' + v + '"'
-    result.push('option ' + option + ' = ' + v + ';')
+
+    if (~option.indexOf('.')) option = '(' + option + ')'
+
+    var type = typeof v
+
+    if (type === 'object') {
+      v = onoption_map(v, [])
+      if (v.length) result.push('option ' + option + ' = {', v, '};')
+    } else {
+      if (type === 'string' && option !== 'optimize_for') v = '"' + v + '"'
+      result.push('option ' + option + ' = ' + v + ';')
+    }
   })
   if (keys.length > 0) {
     result.push('')
   }
+
+  return result
+}
+
+var onoption_map = function (o, result) {
+  var keys = Object.keys(o)
+  keys.forEach(function (k) {
+    var v = o[k]
+
+    var type = typeof v
+
+    if (type === 'object') {
+      if (Array.isArray(v)) {
+        v.forEach(function (v) {
+          v = onoption_map(v, [])
+          if (v.length) result.push(k + ' {', v, '}')
+        })
+      } else {
+        v = onoption_map(v, [])
+        if (v.length) result.push(k + ' {', v, '}')
+      }
+    } else {
+      if (type === 'string') v = '"' + v + '"'
+      result.push(k + ': ' + v)
+    }
+  })
+
+  return result
+}
+
 }
 
 var indent = function (lvl) {
