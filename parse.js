@@ -139,7 +139,11 @@ var onmessagebody = function (tokens) {
         break
 
       default:
-        throw new Error('Unexpected token in message: ' + tokens[0])
+        // proto3 does not require the use of optional/required, assumed as optional
+        // "singular: a well-formed message can have zero or one of this field (but not more than one)."
+        // https://developers.google.com/protocol-buffers/docs/proto3#specifying-field-rules
+        tokens.unshift('optional')
+        body.fields.push(onfield(tokens))
     }
   }
 
