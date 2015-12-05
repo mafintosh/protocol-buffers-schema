@@ -10,6 +10,10 @@ var onfieldoptions = function (tokens) {
       case ',':
         tokens.shift()
         var name = tokens.shift()
+        if (name === '(') {       // handling [(A) = B]
+          name = tokens.shift()
+          tokens.shift()          // remove the end of bracket
+        }
         if (tokens[0] !== '=') throw new Error('Unexpected token in field options: ' + tokens[0])
         tokens.shift()
         if (tokens[0] === ']') throw new Error('Unexpected ] in field option')
