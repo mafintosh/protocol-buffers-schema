@@ -1,0 +1,29 @@
+{
+  "syntax": 3,
+  "package": null,
+  "imports": [],
+  "enums": [],
+  "messages": [{
+    "name": "Person",
+    "enums": [{
+      "name": "PhoneType",
+      "values": {
+        "MOBILE": 0,
+        "HOME": 1,
+        "WORK": 2
+      },
+      "valueoptions": {
+        "MOBILE": {
+          "enum_value_is_deprecated": "true"
+        },
+        "HOME": {},
+        "WORK": {}
+      }
+    }],
+    "messages": [],
+    "fields": [],
+    "extensions": null
+  }],
+  "options": {},
+  "extends": []
+}

@@ -108,3 +108,8 @@ tape('service parse + stringify', function (t) {
   t.same(schema.stringify(schema.parse(fixture('service.proto'))), syntax + fixture('service.proto'))
   t.end()
 })
+
+tape('enums with options', function (t) {
+  t.same(schema.parse(fixture('enum.proto')), require('./fixtures/enum.json'))
+  t.end()
+})

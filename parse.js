@@ -240,19 +240,25 @@ var onsyntaxversion = function (tokens) {
 }
 
 var onenumvalue = function (tokens) {
+  var options = {}
   if (tokens.length < 4) throw new Error('Invalid enum value: ' + tokens.slice(0, 3).join(' '))
   if (tokens[1] !== '=') throw new Error('Expected = but found ' + tokens[1])
-  if (tokens[3] !== ';') throw new Error('Expected ; but found ' + tokens[1])
+  if (tokens[3] !== ';' && tokens[3] !== '[') throw new Error('Expected ; or [ but found ' + tokens[1])
 
   var name = tokens.shift()
   tokens.shift()
 
   var value = Number(tokens.shift())
-  tokens.shift()
+
+  if (tokens[0] === '[') {
+    options = onfieldoptions(tokens)
+  }
+  tokens.shift() // expecting the semicolon here
 
   return {
     name: name,
-    value: value
+    value: value,
+    options: options
   }
 }
 
@@ -261,7 +267,8 @@ var onenum = function (tokens) {
 
   var e = {
     name: tokens.shift(),
-    values: {}
+    values: {},
+    valueoptions: {}
   }
 
   if (tokens[0] !== '{') throw new Error('Expected { but found ' + tokens[0])
@@ -281,7 +288,9 @@ var onenum = function (tokens) {
       }
     }
     var val = onenumvalue(tokens)
+    // console.log(val)
     e.values[val.name] = val.value
+    e.valueoptions[val.name] = val.options
   }
 
   throw new Error('No closing tag for enum')

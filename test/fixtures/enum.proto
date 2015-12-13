@@ -1,0 +1,8 @@
+message Person {
+  enum PhoneType {
+    option allow_alias = true;
+    MOBILE = 0 [(enum_value_is_deprecated) = true];
+    HOME = 1;
+    WORK = 2;
+  }
+}
