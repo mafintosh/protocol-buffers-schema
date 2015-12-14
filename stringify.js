@@ -50,21 +50,33 @@ var onmessage = function (m, result) {
 
 var onenum = function (e, result) {
   result.push('enum ' + e.name + ' {')
-
-  var vals = Object.keys(e.values).map(function (key) {
-    return key + ' = ' + e.values[key] + ';'
+  if (!e.options) e.options = {}
+  var options = onoption(e.options, [])
+  if (options.length > 1) {
+    result.push(options.slice(0, -1))
+  }
+  Object.keys(e.values).map(function (v) {
+    var val = onenumvalue(e.values[v])
+    result.push([v + ' = ' + val + ';'])
   })
-
-  result.push(vals)
   result.push('}', '')
   return result
+}
+
+var onenumvalue = function (v, result) {
+  var opts = Object.keys(v.options || {}).map(function (key) {
+    return key + ' = ' + v.options[key]
+  }).join(',')
+
+  if (opts) opts = ' [' + opts + ']'
+  var val = v.value + opts
+  return val
 }
 
 var onoption = function (o, result) {
   var keys = Object.keys(o)
   keys.forEach(function (option) {
     var v = o[option]
-
     if (~option.indexOf('.')) option = '(' + option + ')'
 
     var type = typeof v
@@ -114,9 +126,7 @@ var onservices = function (s, result) {
   result.push('service ' + s.name + ' {')
 
   if (!s.options) s.options = {}
-
   onoption(s.options, result)
-
   if (!s.methods) s.methods = []
   s.methods.forEach(function (m) {
     result.push(onrpc(m, []))
@@ -178,6 +188,5 @@ module.exports = function (schema) {
       onservices(s, result)
     })
   }
-
   return result.map(indent('')).join('\n')
 }
