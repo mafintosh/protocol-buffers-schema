@@ -7,7 +7,9 @@ option optimize_for = SPEED;
 
 message Person {
   enum PhoneType {
-    MOBILE = 0;
+    option allow_alias = true;
+    option custom_option = true;
+    MOBILE = 0 [some_enum_option = true];
     HOME = 1;
     WORK = 2;
   }

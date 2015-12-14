@@ -8,14 +8,24 @@
     "enums": [{
       "name": "PhoneType",
       "values": {
-        "MOBILE": 0,
-        "HOME": 1,
-        "WORK": 2
+        "MOBILE": {
+          "value": 0,
+          "options": {
+            "some_enum_option": "true"
+          }
+        },
+        "HOME": {
+          "value": 1,
+          "options": {}
+        },
+        "WORK": {
+          "value": 2,
+          "options": {}
+        }
       },
-      "valueoptions": {
-        "MOBILE": {},
-        "HOME": {},
-        "WORK": {}
+      "options": {
+        "allow_alias": true,
+        "custom_option": true
       }
     }],
     "messages": [{
