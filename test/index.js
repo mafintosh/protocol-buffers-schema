@@ -113,3 +113,17 @@ tape('enums with options', function (t) {
   t.same(schema.parse(fixture('enum.proto')), require('./fixtures/enum.json'))
   t.end()
 })
+
+tape('varint, 64-bit and 32-bit wire types can be packed', function (t) {
+  t.doesNotThrow(function () {
+    schema.parse(fixture('valid-packed.proto'))
+  }, 'should not throw')
+  t.end()
+})
+
+tape('non-primitive packed should throw', function (t) {
+  t.throws(function () {
+    schema.parse(fixture('pheromon-trajectories.proto'))
+  }, 'should throw')
+  t.end()
+})
