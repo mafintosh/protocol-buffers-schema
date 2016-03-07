@@ -623,25 +623,35 @@ var parse = function (buf) {
 
   schema.messages.forEach(function (msg) {
     msg.fields.forEach(function (field) {
+      var fieldSplit
+      var messageName
+      var nestedEnumName
+      var message
+
+      function enumNameIsFieldType (en) {
+        return en.name === field.type
+      }
+
+      function enumNameIsNestedEnumName (en) {
+        return en.name === nestedEnumName
+      }
+
       if (field.options && field.options.packed === 'true') {
         if (PACKABLE_TYPES.indexOf(field.type) === -1) {
           // let's see if it's an enum
           if (field.type.indexOf('.') === -1) {
-            if (msg.enums && msg.enums.some(function (en) {
-              return en.name === field.type
-            })) {
+            if (msg.enums && msg.enums.some(enumNameIsFieldType)) {
               return
             }
           } else {
-            var fieldSplit = field.type.split('.')
+            fieldSplit = field.type.split('.')
             if (fieldSplit.length > 2) {
               throw new Error('what is this?')
             }
 
-            var messageName = fieldSplit[0]
-            var enumName = fieldSplit[1]
+            messageName = fieldSplit[0]
+            nestedEnumName = fieldSplit[1]
 
-            var message
             schema.messages.some(function (msg) {
               if (msg.name === messageName) {
                 message = msg
@@ -649,14 +659,17 @@ var parse = function (buf) {
               }
             })
 
-            if (message && message.enums && message.enums.some(function (en) {
-              return en.name === enumName
-            })) {
+            if (message && message.enums && message.enums.some(enumNameIsNestedEnumName)) {
               return
             }
           }
 
-          throw new Error('Fields of type ' + field.type + ' cannot be declared [packed=true]. Only repeated fields of primitive numeric types (types which use the varint, 32-bit, or 64-bit wire types) can be declared "packed". See https://developers.google.com/protocol-buffers/docs/encoding#optional')
+          throw new Error(
+            'Fields of type ' + field.type + ' cannot be declared [packed=true]. ' +
+            'Only repeated fields of primitive numeric types (types which use ' +
+            'the varint, 32-bit, or 64-bit wire types) can be declared "packed". ' +
+            'See https://developers.google.com/protocol-buffers/docs/encoding#optional'
+          )
         }
       }
     })
