@@ -8,6 +8,7 @@
     {
       "name": "Point",
       "enums": [],
+      "extends": [],
       "messages": [],
       "extensions": null,
       "fields": [
@@ -46,6 +47,7 @@
     {
       "name": "Line",
       "enums": [],
+      "extends": [],
       "extensions": null,
       "messages": [],
       "fields": [

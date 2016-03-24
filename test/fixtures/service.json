@@ -9,6 +9,7 @@
 		  "name": "HelloRequest",
 		  "extensions": null,
 		  "enums": [],
+		  "extends": [],
 		  "messages": [],
 		  "fields": [
 				{
@@ -27,6 +28,7 @@
 		  "name": "HelloResponse",
 		  "extensions": null,
 		  "enums": [],
+		  "extends": [],
 		  "messages": [],
 		  "fields": [
 				{

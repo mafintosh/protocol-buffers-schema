@@ -9,6 +9,7 @@
 			"name": "SearchResponse",
 			"extensions": null,
 			"enums": [],
+			"extends": [],
 			"messages": [],
 			"fields": [
 				{
