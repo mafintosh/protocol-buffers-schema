@@ -6,6 +6,7 @@
   "messages": [{
     "name": "OptionFields",
     "enums": [],
+    "extends": [],
     "messages": [],
     "fields": [{
       "name": "type",
@@ -23,6 +24,7 @@
   }, {
     "name": "MoreOptionFields",
     "enums": [],
+    "extends": [],
     "messages": [],
     "fields": [{
       "name": "values",
