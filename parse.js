@@ -1,6 +1,18 @@
 var tokenize = require('./tokenize')
 var MAX_RANGE = 0x1FFFFFFF
 
+// "Only repeated fields of primitive numeric types (types which use the varint, 32-bit, or 64-bit wire types) can be declared "packed"."
+// https://developers.google.com/protocol-buffers/docs/encoding#optional
+var PACKABLE_TYPES = [
+  // varint wire types
+  'int32', 'int64', 'uint32', 'uint64', 'sint32', 'sint64', 'bool',
+  // + ENUMS
+  // 64-bit wire types
+  'fixed64', 'sfixed64', 'double',
+  // 32-bit wire types
+  'fixed32', 'sfixed32', 'float'
+]
+
 var onfieldoptions = function (tokens) {
   var opts = {}
 
@@ -612,6 +624,60 @@ var parse = function (buf) {
           }
           msg.fields.push(field)
         })
+      }
+    })
+  })
+
+  schema.messages.forEach(function (msg) {
+    msg.fields.forEach(function (field) {
+      var fieldSplit
+      var messageName
+      var nestedEnumName
+      var message
+
+      function enumNameIsFieldType (en) {
+        return en.name === field.type
+      }
+
+      function enumNameIsNestedEnumName (en) {
+        return en.name === nestedEnumName
+      }
+
+      if (field.options && field.options.packed === 'true') {
+        if (PACKABLE_TYPES.indexOf(field.type) === -1) {
+          // let's see if it's an enum
+          if (field.type.indexOf('.') === -1) {
+            if (msg.enums && msg.enums.some(enumNameIsFieldType)) {
+              return
+            }
+          } else {
+            fieldSplit = field.type.split('.')
+            if (fieldSplit.length > 2) {
+              throw new Error('what is this?')
+            }
+
+            messageName = fieldSplit[0]
+            nestedEnumName = fieldSplit[1]
+
+            schema.messages.some(function (msg) {
+              if (msg.name === messageName) {
+                message = msg
+                return msg
+              }
+            })
+
+            if (message && message.enums && message.enums.some(enumNameIsNestedEnumName)) {
+              return
+            }
+          }
+
+          throw new Error(
+            'Fields of type ' + field.type + ' cannot be declared [packed=true]. ' +
+            'Only repeated fields of primitive numeric types (types which use ' +
+            'the varint, 32-bit, or 64-bit wire types) can be declared "packed". ' +
+            'See https://developers.google.com/protocol-buffers/docs/encoding#optional'
+          )
+        }
       }
     })
   })
