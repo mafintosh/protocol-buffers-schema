@@ -35,7 +35,7 @@ var onfield = function (tokens) {
   var field = {
     name: null,
     type: null,
-    tag: 0,
+    tag: -1,
     map: null,
     oneof: null,
     required: false,
@@ -80,6 +80,9 @@ var onfield = function (tokens) {
         break
 
       case ';':
+        if (field.name === null) throw new Error('Missing field name')
+        if (field.type === null) throw new Error('Missing type in message field: ' + field.name)
+        if (field.tag === -1) throw new Error('Missing tag number in message field: ' + field.name)
         tokens.shift()
         return field
 

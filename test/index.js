@@ -113,3 +113,10 @@ tape('enums with options', function (t) {
   t.same(schema.parse(fixture('enum.proto')), require('./fixtures/enum.json'))
   t.end()
 })
+
+tape('fail on no tags', function (t) {
+  t.throws(function () {
+    schema.parse(fixture('no-tags.proto'))
+  })
+  t.end()
+})
