@@ -146,6 +146,13 @@ var onmessagebody = function (tokens) {
         tokens.shift()
         break
 
+      case 'reserved':
+        tokens.shift()
+        while (tokens[0] !== ';') {
+          tokens.shift()
+        }
+        break
+
       default:
         // proto3 does not require the use of optional/required, assumed as optional
         // "singular: a well-formed message can have zero or one of this field (but not more than one)."
