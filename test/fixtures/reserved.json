@@ -6,34 +6,34 @@
   "extends": [],
   "options": {},
   "messages": [
-		{
-		  "name": "Reserved",
-		  "extensions": null,
-		  "enums": [],
-		  "extends": [],
-		  "messages": [],
-		  "fields": [
-				{
-			    "name": "x",
-			    "type": "string",
-			    "tag": 1,
-			    "map": null,
-			    "oneof": null,
-			    "required": false,
-			    "repeated": false,
-			    "options": {}
-			  },
+    {
+      "name": "Reserved",
+      "extensions": null,
+      "enums": [],
+      "extends": [],
+      "messages": [],
+      "fields": [
         {
-			    "name": "y",
-			    "type": "string",
-			    "tag": 10,
-			    "map": null,
-			    "oneof": null,
-			    "required": false,
-			    "repeated": false,
-			    "options": {}
-			  }
-			]
-		}
+          "name": "x",
+          "type": "string",
+          "tag": 1,
+          "map": null,
+          "oneof": null,
+          "required": false,
+          "repeated": false,
+          "options": {}
+        },
+        {
+          "name": "y",
+          "type": "string",
+          "tag": 10,
+          "map": null,
+          "oneof": null,
+          "required": false,
+          "repeated": false,
+          "options": {}
+        }
+      ]
+    }
   ]
 }
