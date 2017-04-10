@@ -120,3 +120,8 @@ tape('fail on no tags', function (t) {
   })
   t.end()
 })
+
+tape('reserved', function (t) {
+  t.same(schema.parse(fixture('reserved.proto')), require('./fixtures/reserved.json'))
+  t.end()
+})
