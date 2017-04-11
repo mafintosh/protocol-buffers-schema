@@ -147,6 +147,7 @@ var onmessagebody = function (tokens) {
         break
 
       case 'reserved':
+      case 'option':
         tokens.shift()
         while (tokens[0] !== ';') {
           tokens.shift()
