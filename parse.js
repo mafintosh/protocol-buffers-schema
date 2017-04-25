@@ -405,17 +405,13 @@ var onoptionMap = function (tokens) {
     switch (tokens[0]) {
       case ':':
         if (map[key] !== undefined) throw new Error('Duplicate option map key ' + key)
-
         tokens.shift()
-
         value = parse(tokens.shift())
 
         if (value === '{') {
           // option foo = {bar: baz}
           value = onoptionMap(tokens)
         }
-
-        tokens.shift()
 
         map[key] = value
         break
