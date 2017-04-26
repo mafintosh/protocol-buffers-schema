@@ -351,6 +351,10 @@ var onoption = function (tokens) {
           if (tokens[0] !== ')') throw new Error('Expected ) but found ' + tokens[0])
           tokens.shift()
         }
+
+        if (tokens[0][0] === '.') {
+          name += tokens.shift()
+        }
         break
 
       case '=':
@@ -401,9 +405,7 @@ var onoptionMap = function (tokens) {
     switch (tokens[0]) {
       case ':':
         if (map[key] !== undefined) throw new Error('Duplicate option map key ' + key)
-
         tokens.shift()
-
         value = parse(tokens.shift())
 
         if (value === '{') {
