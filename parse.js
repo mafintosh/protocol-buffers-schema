@@ -351,6 +351,11 @@ var onoption = function (tokens) {
           if (tokens[0] !== ')') throw new Error('Expected ) but found ' + tokens[0])
           tokens.shift()
         }
+
+        if (tokens[0][0] === '.') {
+          name += tokens.shift()
+        }
+
         break
 
       case '=':

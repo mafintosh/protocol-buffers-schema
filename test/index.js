@@ -139,3 +139,8 @@ tape('non-primitive packed should throw', function (t) {
   }, 'should throw')
   t.end()
 })
+
+tape('custom options parse', function (t) {
+  t.same(schema.parse(fixture('option.proto')), require('./fixtures/option.json'))
+  t.end()
+})
