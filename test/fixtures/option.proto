@@ -43,6 +43,9 @@ message ResponseType {}
 
 service MyService {
   option (my_service_option) = FOO;
+  option (my_service_option_map) = {
+    foo: "bar";
+  };
 
   rpc MyMethod(RequestType) returns(ResponseType) {
     // Note:  my_method_option has type MyMessage.  We can set each field
