@@ -24,7 +24,7 @@ module.exports = function (sch) {
   }
 
   return sch
-    .replace(/([;,{}\(\)=\:\[\]<>]|\/\*|\*\/)/g, ' $1 ')
+    .replace(/([;,{}()=:[\]<>]|\/\*|\*\/)/g, ' $1 ')
     .split(/\n/)
     .map(trim)
     .filter(Boolean)

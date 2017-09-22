@@ -4,8 +4,8 @@
   "description": "No nonsense protocol buffers schema parser written in Javascript",
   "main": "index.js",
   "devDependencies": {
-    "standard": "^5.4.1",
-    "tape": "^4.2.2"
+    "standard": "^10.0.3",
+    "tape": "^4.8.0"
   },
   "scripts": {
     "test": "standard && tape test/*.js"
