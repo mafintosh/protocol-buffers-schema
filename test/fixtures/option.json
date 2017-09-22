@@ -249,7 +249,10 @@
         }
       ],
       "options": {
-        "my_service_option": "FOO"
+        "my_service_option": "FOO",
+        "my_service_option_map": {
+          "foo": "bar"
+        }
       }
     }
   ]

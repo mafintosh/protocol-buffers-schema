@@ -417,6 +417,10 @@ var onoptionMap = function (tokens) {
         }
 
         map[key] = value
+
+        if (tokens[0] === ';') {
+          tokens.shift()
+        }
         break
 
       case '{':
