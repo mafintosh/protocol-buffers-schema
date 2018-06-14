@@ -3,43 +3,75 @@
   "package": null,
   "imports": [],
   "enums": [],
-  "messages": [{
-    "name": "OptionFields",
-    "enums": [],
-    "extends": [],
-    "messages": [],
-    "fields": [{
-      "name": "type",
-      "type": "string",
-      "tag": 2,
-      "map": null,
-      "oneof": null,
-      "required": false,
-      "repeated": false,
-      "options": {
-        "mylist": "\"some,values,[here]\""
-      }
-    }],
-    "extensions": null
-  }, {
-    "name": "MoreOptionFields",
-    "enums": [],
-    "extends": [],
-    "messages": [],
-    "fields": [{
-      "name": "values",
-      "type": "string",
-      "tag": 3,
-      "map": null,
-      "oneof": null,
-      "required": false,
-      "repeated": false,
-      "options": {
-        "mylist2": "'[more,values],[here]'"
-      }
-    }],
-    "extensions": null
-  }],
+  "messages": [
+    {
+      "name": "OptionFields",
+      "enums": [],
+      "extends": [],
+      "messages": [],
+      "fields": [
+        {
+          "name": "type",
+          "type": "string",
+          "tag": 2,
+          "map": null,
+          "oneof": null,
+          "required": false,
+          "repeated": false,
+          "options": {
+            "mylist": "\"some,values,[here]\""
+          }
+        }
+      ],
+      "extensions": null
+    },
+    {
+      "name": "MoreOptionFields",
+      "enums": [],
+      "extends": [],
+      "messages": [],
+      "fields": [
+        {
+          "name": "values",
+          "type": "string",
+          "tag": 3,
+          "map": null,
+          "oneof": null,
+          "required": false,
+          "repeated": false,
+          "options": {
+            "mylist2": "'[more,values],[here]'"
+          }
+        }
+      ],
+      "extensions": null
+    },
+    {
+      "name": "MoreMoreOptionFields",
+      "enums": [],
+      "extends": [],
+      "messages": [],
+      "fields": [
+        {
+          "name": "values",
+          "type": "string",
+          "tag": 4,
+          "map": null,
+          "oneof": null,
+          "required": false,
+          "repeated": false,
+          "options": {
+            "myobject": {
+              "option1": "\"123\"",
+              "option2": "123",
+              "option3": "false"
+            }
+          }
+        }
+      ],
+      "extensions": null
+    }
+  ],
   "options": {},
   "extends": []
 }

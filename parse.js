@@ -13,6 +13,31 @@ var PACKABLE_TYPES = [
   'fixed32', 'sfixed32', 'float'
 ]
 
+var onfieldoptionsvalue = function (tokens) {
+  if (tokens[0] !== '{') return tokens.shift()
+  var opts = {}
+  while (tokens.length) {
+    switch (tokens[0]) {
+      case '{':
+      case ',':
+        tokens.shift()
+        if (tokens[0] === '}') break
+        var name = tokens.shift()
+        if (tokens[0] !== ':') throw new Error(`Unexpected token in field options value: ${tokens}`)
+        tokens.shift()
+        if (tokens[0] === '}') throw new Error('Unexpected } in field options value')
+        opts[name] = onfieldoptionsvalue(tokens)
+        break
+      case '}':
+        tokens.shift()
+        return opts
+
+      default:
+        throw new Error(`Unexpected token in field options value: ${tokens}`)
+    }
+  }
+}
+
 var onfieldoptions = function (tokens) {
   var opts = {}
 
@@ -29,7 +54,7 @@ var onfieldoptions = function (tokens) {
         if (tokens[0] !== '=') throw new Error('Unexpected token in field options: ' + tokens[0])
         tokens.shift()
         if (tokens[0] === ']') throw new Error('Unexpected ] in field option')
-        opts[name] = tokens.shift()
+        opts[name] = onfieldoptionsvalue(tokens)
         break
       case ']':
         tokens.shift()

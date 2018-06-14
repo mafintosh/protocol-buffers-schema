@@ -1,6 +1,6 @@
 {
   "name": "protocol-buffers-schema",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "description": "No nonsense protocol buffers schema parser written in Javascript",
   "main": "index.js",
   "devDependencies": {
