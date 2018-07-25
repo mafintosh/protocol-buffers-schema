@@ -8,8 +8,7 @@ var onfield = function (f, result) {
   }).join(',')
 
   if (opts) opts = ' [' + opts + ']'
-
-  result.push((prefix ? prefix + ' ' : '') + (f.map === 'map' ? '' : f.type + ' ') + f.name + ' = ' + f.tag + opts + ';')
+  result.push((prefix ? prefix + ' ' : '') + (f.map ? '' : f.type + ' ') + f.name + ' = ' + f.tag + opts + ';')
   return result
 }
 
