@@ -26,6 +26,11 @@ var onfieldoptions = function (tokens) {
           name = tokens.shift()
           tokens.shift()          // remove the end of bracket
         }
+        while (tokens[0].startsWith('.')) {
+            // remove nested fields. e.g. .field1.field2 in (opt).field1.field2.
+            tokens.shift()
+        }
+        
         if (tokens[0] !== '=') throw new Error('Unexpected token in field options: ' + tokens[0])
         tokens.shift()
         if (tokens[0] === ']') throw new Error('Unexpected ] in field option')
