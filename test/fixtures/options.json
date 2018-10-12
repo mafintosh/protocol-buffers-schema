@@ -4,38 +4,74 @@
   "imports": [],
   "enums": [],
   "messages": [{
-    "name": "OptionFields",
-    "enums": [],
-    "extends": [],
-    "messages": [],
-    "fields": [{
-      "name": "type",
-      "type": "string",
-      "tag": 2,
-      "map": null,
-      "oneof": null,
-      "required": false,
-      "repeated": false,
-      "options": {
-        "mylist": "\"some,values,[here]\""
-      }
-    }],
-    "extensions": null
-  }, {
-    "name": "MoreOptionFields",
+     "name": "OptionFields",
+     "enums": [],
+     "extends": [],
+     "messages": [],
+     "fields": [{
+       "name": "type",
+       "type": "string",
+       "tag": 2,
+       "map": null,
+       "oneof": null,
+       "required": false,
+       "repeated": false,
+       "options": {
+         "mylist": "\"some,values,[here]\""
+       }
+     }],
+     "extensions": null
+   }, {
+     "name": "MoreOptionFields",
+     "enums": [],
+     "extends": [],
+     "messages": [],
+     "fields": [{
+       "name": "values",
+       "type": "string",
+       "tag": 3,
+       "map": null,
+       "oneof": null,
+       "required": false,
+       "repeated": false,
+       "options": {
+         "mylist2": "'[more,values],[here]'"
+       }
+     }],
+     "extensions": null
+   }, {
+    "name": "OptionMessageFields",
     "enums": [],
     "extends": [],
     "messages": [],
     "fields": [{
       "name": "values",
       "type": "string",
-      "tag": 3,
+      "tag": 4,
       "map": null,
       "oneof": null,
       "required": false,
       "repeated": false,
       "options": {
-        "mylist2": "'[more,values],[here]'"
+        "mylist.int_field": "1"
+      }
+    }],
+    "extensions": null
+  }, {
+    "name": "NestedOptionMessageFields",
+    "enums": [],
+    "extends": [],
+    "messages": [],
+    "fields": [{
+      "name": "name",
+      "type": "string",
+      "tag": 5,
+      "map": null,
+      "oneof": null,
+      "required": false,
+      "repeated": false,
+      "options": {
+        "custom_option.field1.field2": "true"
       }
     }],
     "extensions": null
@@ -43,3 +79,4 @@
   "options": {},
   "extends": []
 }
+
