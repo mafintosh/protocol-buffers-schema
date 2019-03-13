@@ -22,9 +22,9 @@ var onfieldoptions = function (tokens) {
       case ',':
         tokens.shift()
         var name = tokens.shift()
-        if (name === '(') {       // handling [(A) = B]
+        if (name === '(') { // handling [(A) = B]
           name = tokens.shift()
-          tokens.shift()          // remove the end of bracket
+          tokens.shift() // remove the end of bracket
         }
         if (tokens[0] !== '=') throw new Error('Unexpected token in field options: ' + tokens[0])
         tokens.shift()
@@ -64,7 +64,7 @@ var onfield = function (tokens) {
 
       case 'map':
         field.type = 'map'
-        field.map = {from: null, to: null}
+        field.map = { from: null, to: null }
         tokens.shift()
         if (tokens[0] !== '<') throw new Error('Unexpected token in map type: ' + tokens[0])
         tokens.shift()
@@ -196,7 +196,7 @@ var onextensions = function (tokens) {
   to = Number(to)
   if (isNaN(to)) throw new Error('Invalid to in extensions definition')
   if (tokens.shift() !== ';') throw new Error('Missing ; in extensions definition')
-  return {from: from, to: to}
+  return { from: from, to: to }
 }
 var onmessage = function (tokens) {
   tokens.shift()
@@ -336,7 +336,7 @@ var onoption = function (tokens) {
   while (tokens.length) {
     if (tokens[0] === ';') {
       tokens.shift()
-      return {name: name, value: value}
+      return { name: name, value: value }
     }
     switch (tokens[0]) {
       case 'option':

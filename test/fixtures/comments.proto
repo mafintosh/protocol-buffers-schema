@@ -9,7 +9,7 @@ message Point {
 message Line {/*
 */required Point start = 1;
   required Point end = 2;
-  optional string label = 3;
+  optional string label = 3 [default = "http://127.0.0.1"];
 }
 
 /**
