@@ -1,4 +1,6 @@
-syntax = "proto3";
+import { parse } from './parse'
+
+let parsed = parse(`syntax = "proto3";
 package example;
 option java_package = "com.example";
 option optimize_for = SPEED;
@@ -33,3 +35,10 @@ message Test {
 service ServiceName {
   rpc MethodName (Hello) returns (Test);
 }
+`)
+
+console.log('Parsed:')
+console.debug(parsed)
+console.log(JSON.stringify(parsed, null, 2))
+console.log('Stringified:')
+console.log(parsed.toString())

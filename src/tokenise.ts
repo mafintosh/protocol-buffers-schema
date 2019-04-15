@@ -32,7 +32,7 @@ const joinInternalStrings = () => {
 const tokenRetriever = /([;,{}()=:[\]<>]|\/\*|\*\/)/g;
 export const tokenise = (s: string): string[] => s
 	.replace(tokenRetriever, ' $1 ')
-	.split(/\n/g)
+	.split(/[\r\n]+/g)
 	.map(noComments)
 	.map(trim)
 	.filter(Boolean)

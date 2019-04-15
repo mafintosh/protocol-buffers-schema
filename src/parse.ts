@@ -1,5 +1,6 @@
 import { tokenise } from "./tokenise";
-import { PACKABLE_TYPES, Schema, TokenCount, onSyntaxVersion, onPackageName, onEnum, onMessage, onOption, onImport, onExtend, onService, Message } from "./parser-internals";
+import { PACKABLE_TYPES, TokenCount, onSyntaxVersion, onPackageName, onEnum, onMessage, onOption, onImport, onExtend, onService, Message } from "./parser-internals";
+import { Schema } from "./schema";
 
 type parserInternal = (schema: Schema, n: TokenCount) => void;
 interface ToString {toString(): string;}
@@ -16,7 +17,16 @@ export function parse<T extends ToString>(from: T) {
 		case 'package': call(onPackageName); break;
 		case 'enum': call(onEnum); break;
 		case 'message': call(onMessage); break;
-		case 'option': call(onOption); break;
+		case 'option':
+			call(onOption);
+			if (schema.options.has("optimize_for")) {
+				let optimize_for = schema.options.get("optimize_for")
+				switch (optimize_for) {
+					case 'SPEED': case 'CODE_SIZE': case 'LITE_RUNTIME':
+						schema.optimize_for = optimize_for;
+				}
+			}
+			break;
 		case 'import': call(onImport); break;
 		case 'extend': call(onExtend); break;
 		case 'service': call(onService); break;

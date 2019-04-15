@@ -1,3 +1,5 @@
+import { Schema } from "./schema";
+
 const MAX_RANGE = 0x1FFFFFFF ;
 
 // "Only repeated fields of primitive numeric types (types which use the varint, 32-bit, or 64-bit wire types) can be declared "packed"."
@@ -45,7 +47,7 @@ export class MessageField extends Options {
 interface MessageFields {fields: MessageField[]}
 function onField<T extends MessageFields>({fields}: T, c: TokenCount) {
 	const field: MessageField = new MessageField;
-	while (!c.done) switch (c.next()) {
+	while (!c.done) switch (c.peek()) {
 		case '=':
 			field.tag = Number(c.next(2));
 			break
@@ -70,7 +72,7 @@ function onField<T extends MessageFields>({fields}: T, c: TokenCount) {
 		case 'required':
 		case 'optional':
 			{
-				let t = c.peek(-1);
+				let t = c.next();
 				field.required = t === 'required'
 				field.repeated = t === 'repeated'
 				field.type = c.next()
@@ -91,12 +93,14 @@ function onField<T extends MessageFields>({fields}: T, c: TokenCount) {
 				throw new SyntaxError(`Missing type in message field: ${field.name}`)
 			if (field.tag === -1)
 				throw new SyntaxError(`Missing tag number in message field: ${field.name}`)
-			c.t++
 			fields.push(field)
+			c.t++
 			return field;
 
 		default:
-			throw new Error(`Unexpected token in message field: ${c.peek()}`)
+			field.type = c.next()
+			field.name = c.next()
+			break
 	}
 
 	throw new Error('No ; found for message field')
@@ -104,7 +108,6 @@ function onField<T extends MessageFields>({fields}: T, c: TokenCount) {
 function onFieldOptions<T extends Options>({options}: T, c: TokenCount) {
 	while (!c.done) switch (c.peek()) {
 		case '[':
-		//@ts-ignore
 		case ',': {
 			let name = c.next(2);
 			if (name === ')') {
@@ -118,6 +121,7 @@ function onFieldOptions<T extends Options>({options}: T, c: TokenCount) {
 			let value = c.next();
 			options.set(name, value);
 		}
+		break
 		case ']':
 			c.t++
 			return;
@@ -138,9 +142,9 @@ export function onPackageName(schema: Schema, t: TokenCount) {
 export function onSyntaxVersion(schema: Schema, n: TokenCount) {
 	if (n.peek(1) !== '=')
 		throw new SyntaxError(`Syntax version missing assignment`);
-	switch (n.next(2)) {
-		case '"proto2"': schema.syntax = 2; return;
-		case '"proto3"': schema.syntax = 3; return;
+	switch (n.next(3)) {
+		case '"proto2"': n.t++; schema.syntax = 2; return 2;
+		case '"proto3"': n.t++; schema.syntax = 3; return 3;
 	}
 	throw new SyntaxError(`${n.peek(-2)} is not a valid protobuf syntax version`)
 }
@@ -157,7 +161,7 @@ export function onOption<T extends Options>({options}: T, n: TokenCount) {
 		case 'option':
 			paren = n.peek() === '('
 			name = n.next(+paren + 1);
-			if (paren && n.next() !== ')') throw new SyntaxError('Parenthesised options must be closed.')
+			if (paren && n.next() !== ')') throw new SyntaxError(`Parenthesised options must be closed (name: ${name})`)
 			if (n.peek()[0] === '.') name += n.next()
 			break;
 
@@ -167,18 +171,14 @@ export function onOption<T extends Options>({options}: T, n: TokenCount) {
 			if (name === 'optimize_for') switch (value) {
 				default: throw new SyntaxError(`Unexpected value for option optimize_for: ${value}`)
 				case 'SPEED': case 'CODE_SIZE': case 'LITE_RUNTIME':
-			} else if (value === '{') throw new Error('Unimplemented')
+			} else if (value === '{') throw new Error('Map options are currently unimplemented.')
 			break
 	}
 }
-class EnumValue extends Options {
-	value: number
-	constructor(public name: string, value: number) {
-		super()
-		this.value = +value
-	}
+export class EnumValue extends Options {
+	constructor(public name: string, public value: number) {super()}
 }
-class Enum extends Options {
+export class Enum extends Options {
 	values: EnumValue[] = []
 	constructor(public name: string) {super()}
 }
@@ -201,9 +201,10 @@ function onEnumValue(e: Enum, n: TokenCount) {
 	}
 	throw new SyntaxError(`enum value was not closed before token completion`)
 }
-type Enums = {enums: Enum[]};
+export interface Enums {enums: Enum[]};
 export function onEnum<T extends Enums>({enums}: T, n: TokenCount) {
 	const tenum: Enum = new Enum(n.next(2))
+	n.next()
 	while (!n.done) switch (n.peek()) {
 		case 'option':
 			onOption(tenum, n);
@@ -230,9 +231,9 @@ export function onMessage<T extends Messages>({messages}: T, c: TokenCount) {
 	const m = new Message(c.next(2))
 	let lvl = 0
 	while (!c.done) switch (c.peek()) {
-		case '{': ++lvl; c.next(); break;
+		case '{': ++lvl; ++c.t; break;
 		case '}':
-			c.next();
+			++c.t;
 			if (!--lvl) {
 				messages.push(m);
 				return m
@@ -253,13 +254,13 @@ export function onMessage<T extends Messages>({messages}: T, c: TokenCount) {
 				field.oneof = name;
 				field.optional = true;
 			}
-			c.next();
+			c.t++;
 		}
 		break
 		case 'extend': onExtend(m, c); break;
-		case ';': c.next(); break;
+		case ';': c.t++; break;
 		case 'reserved': case 'option':
-			do c.next();
+			do ++c.t;
 			while (c.peek() !== ';');
 			break;
 
@@ -283,7 +284,7 @@ function onExtensions(m: Message, c: TokenCount) {
 		throw new SyntaxError('Missing ; in extensions definition')
 	m.extensions = {from, to}
 }
-class Extends {
+export class Extends {
 	messages: Message[] = []
 	constructor(public name: string) {}
 }
@@ -300,14 +301,14 @@ export function onImport({imports}: Schema, c: TokenCount) {
 
 	imports.push(file)
 }
-class RPC extends Options {
+export class RPC extends Options {
 	constructor(public name: string) {super()}
 	input_type = ''
 	output_type = ''
 	client_streaming = false
 	server_streaming = false
 }
-class Service extends Options {
+export class Service extends Options {
 	constructor(public name: string) {super()}
 	methods: RPC[] = []
 }
@@ -352,9 +353,7 @@ function onRPC({methods}: Service, c: TokenCount) {
 	}
 	rpc.output_type = c.next()
 	e(')')
-	if (c.peek() === ';') c.t++
-	e('{')
-	while (!c.done) switch (c.next()) {
+	if (c.peek() === '{') while (!c.done) switch (c.next()) {
 		case '}':
 			if (c.peek() === ';') c.t++
 			methods.push(rpc)
@@ -363,33 +362,28 @@ function onRPC({methods}: Service, c: TokenCount) {
 		case 'option':
 			onOption(rpc, c);
 			break;
+	} else if (c.peek() === ';') {
+		c.t++;
+		methods.push(rpc);
+		return rpc
 	}
 	throw new Error('No closing tag for rpc')
 }
 
-export class Schema extends Options {
-	syntax: 2 | 3 = 3;
-	package: string = '';
-	imports: string[] = [];
-	enums: Enum[] = [];
-	messages: Message[] = [];
-	extends: Extends[] = [];
-	services: Service[] = []
-}
-
-
 export class TokenCount {
 	t = 0
+	l: number
 	done: boolean
 	constructor(private tokens: readonly string[]) {
-		this.done = tokens.length === 0
+		this.l = tokens.length
+		this.done = this.l === 0
 	}
 	peek(n = 0) {
 		return this.tokens[this.t + n]
 	}
 	next(n = 1) {
 		if (n < 1) throw new RangeError()
-		this.done = this.tokens.length === (this.t += n);
+		this.done = this.l === (this.t += n);
 		return this.tokens[this.t - 1];
 	}
 }

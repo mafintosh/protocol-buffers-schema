@@ -1,4 +1,4 @@
-import { Schema } from "./parser-internals";
+import { Schema } from "./schema";
 interface ToString {
     toString(): string;
 }
