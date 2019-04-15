@@ -2,12 +2,13 @@
   "name": "protocol-buffers-schema",
   "version": "4.0.0",
   "description": "No nonsense protocol buffers schema parser written in Javascript",
-  "main": "lib/parse.js",
+  "main": "lib/parse",
   "devDependencies": {
     "standard": "^10.0.3",
     "tape": "^4.8.0"
   },
   "scripts": {
+    "build": "tsc && for i in lib/*; do mv \"$i\" \"lib/$(basename \"$i\" .js).mjs\"",
     "test": "standard && tape test/*.js"
   },
   "repository": {
