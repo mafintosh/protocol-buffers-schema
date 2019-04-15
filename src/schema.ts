@@ -15,10 +15,11 @@ export class Schema extends Options {
 `syntax = "proto${this.syntax}";
 ${this.package && `package ${this.package};`
 }${this.imports.reduce((a, i) => a + `\nimport "${i}";`, '')
-}${this.options.size === 0 ? '' : onOptions(this)}
-${onEnums(this)}
-${onMessages(this)}
-${onServices(this)}`
+}${this.options.size === 0 ? '' : onOptions(this)
+}${onEnums(this)
+}${this.extends.reduce((a, v) => a + `\nextend ${v.name} {${indent(v.messages.map(e => onFields(e.fields)).join('\n'))}}`, '')
+}${onMessages(this)
+}${onServices(this)}`
 	}
 }
 function onOptions<T extends Options>({options}: T): string {
