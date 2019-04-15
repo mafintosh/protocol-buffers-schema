@@ -13,12 +13,12 @@ export class Schema extends Options {
 	toString() {
 		return '' +
 `syntax = "proto${this.syntax}";
-${this.package && `package ${this.package};`}
-${this.options.size === 0 ? '' : onOptions(this)}
+${this.package && `package ${this.package};`
+}${this.imports.reduce((a, i) => a + `\nimport "${i}";`, '')
+}${this.options.size === 0 ? '' : onOptions(this)}
 ${onEnums(this)}
 ${onMessages(this)}
-${onServices(this)}
-`
+${onServices(this)}`
 	}
 }
 function onOptions<T extends Options>({options}: T): string {
