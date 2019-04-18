@@ -1,6 +1,16 @@
 import { Schema } from "./schema";
-
-const MAX_RANGE = 0x1FFFFFFF ;
+interface LookupIs {
+	"enum": Enum;
+	"message": Message;
+	"extends": Extends;
+}
+export interface LookupIn<T extends keyof LookupIs> {
+	name: string;
+	is: T;
+	value: LookupIs[T];
+}
+export type Lookup = LookupIn<keyof LookupIs>[];
+const MAX_RANGE = 0x1FFFFFFF;
 
 // "Only repeated fields of primitive numeric types (types which use the varint, 32-bit, or 64-bit wire types) can be declared "packed"."
 export const PACKABLE_TYPES = Object.freeze([
@@ -13,23 +23,28 @@ export const PACKABLE_TYPES = Object.freeze([
 	'fixed32', 'sfixed32', 'float'
 ])
 export type NameMappedValueMap = Map<string, string>;
-const parseBool = <T extends Options>(m: T, s: string) => {
+const parse_bool = <T extends Options>(m: T, s: string, n: TokenCount) => {
 	if (m.options.has(s)) switch (m.options.get(s)) {
 		case "true": return true;
 		case "false": return false;
-		default: throw new SyntaxError(`Cannot convert value of ${s} (${m.options.get(s)}) to boolean`)
+		default: n.syntax_err(`Cannot convert value of ${s} (${m.options.get(s)}) to boolean`)
 	}
 	return false;
 }
-const optionsWeakMap = new WeakMap<Options, NameMappedValueMap>();
+const opts_wm = new WeakMap<Options, NameMappedValueMap>();
 export class Options {
 	get options(): NameMappedValueMap {
-		let m = optionsWeakMap.get(this);
+		let m = opts_wm.get(this);
 		if (!m) {
-			m = new Map<string, string>();
-			optionsWeakMap.set(this, m);
+			m = new Map;
+			opts_wm.set(this, m);
 		}
 		return m
+	}
+	toJSON() {
+		const options: {[s: string]: string} = {}
+		if (opts_wm.has(this)) for (const [k, v] of opts_wm.get(this)!) options[k] = v
+		return { ...this, options }
 	}
 }
 export class MessageField extends Options {
@@ -45,7 +60,7 @@ export class MessageField extends Options {
 	optional = false;
 }
 interface MessageFields {fields: MessageField[]}
-function onField<T extends MessageFields>({fields}: T, c: TokenCount) {
+function on_field<T extends MessageFields>({fields}: T, c: TokenCount) {
 	const field: MessageField = new MessageField;
 	while (!c.done) switch (c.peek()) {
 		case '=':
@@ -53,19 +68,12 @@ function onField<T extends MessageFields>({fields}: T, c: TokenCount) {
 			break
 
 		case 'map':
-			if (c.peek(1) !== '<')
-				throw new SyntaxError(`Unexpected token in map type: ${c.peek(1)}`)
-			if (c.peek(3) !== ',')
-				throw new SyntaxError(`Unexpected token in map type: ${c.peek(3)}`)
-			if (c.peek(5) !== '>')
-				throw new SyntaxError(`Unexpected token in map type: ${c.peek(5)}`)
-
-			field.type = 'map';
+			field.type = c.assert('map type', 'map', '<') && 'map';
 			field.map = {
-				from: c.next(3),
-				to: c.next(2)
+				from: c.next(),
+				to: c.assert('map type', ',') && c.next()
 			};
-			field.name = c.next(2);
+			field.name = c.assert('map type', '>') && c.next();
 			break;
 
 		case 'repeated':
@@ -81,9 +89,9 @@ function onField<T extends MessageFields>({fields}: T, c: TokenCount) {
 			break
 
 		case '[':
-			onFieldOptions(field, c);
-			field.packed = parseBool(field, "packed")
-			field.deprecated = parseBool(field, "deprecated")
+			on_inline_options(field, c);
+			field.packed = parse_bool(field, "packed", c)
+			field.deprecated = parse_bool(field, "deprecated", c)
 			break;
 
 		case ';':
@@ -94,7 +102,7 @@ function onField<T extends MessageFields>({fields}: T, c: TokenCount) {
 			if (field.tag === -1)
 				throw new SyntaxError(`Missing tag number in message field: ${field.name}`)
 			fields.push(field)
-			c.t++
+			c.next()
 			return field;
 
 		default:
@@ -105,17 +113,16 @@ function onField<T extends MessageFields>({fields}: T, c: TokenCount) {
 
 	throw new Error('No ; found for message field')
 }
-function onFieldOptions<T extends Options>({options}: T, c: TokenCount) {
+function on_inline_options<T extends Options>({options}: T, c: TokenCount) {
 	while (!c.done) switch (c.peek()) {
 		case '[':
 		case ',': {
 			let name = c.next(2);
-			if (name === ')') {
+			if (name === '(') {
 				name = c.next();
-				c.t++
+				c.next()
 			}
-			if (c.next() !== '=')
-				throw new SyntaxError(`Unexpected token in field options in ${name}`);
+			c.assert('inline options', '=')
 			if (c.peek() === ']')
 				throw new SyntaxError(`Unexpected ] in field option in ${name}`);
 			let value = c.next();
@@ -123,53 +130,60 @@ function onFieldOptions<T extends Options>({options}: T, c: TokenCount) {
 		}
 		break
 		case ']':
-			c.t++
+			c.next()
 			return;
 		default:
-			throw new SyntaxError(`Unexpected token in field options: ${c.peek()}`);
+			c.assert('field options', '')
 	}
 
 	throw new SyntaxError('No closing tag for field options');
 }
 
 
-export function onPackageName(schema: Schema, t: TokenCount) {
+export function on_package_name(schema: Schema, t: TokenCount) {
 	schema.package = t.next(2);
-	if (t.next() !== ';')
-		throw new SyntaxError(`No ; found after package name ${schema.package}`);
+	t.assert('package name', ';')
+	return schema.package
 }
 
-export function onSyntaxVersion(schema: Schema, n: TokenCount) {
-	if (n.peek(1) !== '=')
-		throw new SyntaxError(`Syntax version missing assignment`);
-	switch (n.next(3)) {
-		case '"proto2"': n.t++; schema.syntax = 2; return 2;
-		case '"proto3"': n.t++; schema.syntax = 3; return 3;
+export function on_syntax_version(schema: Schema, n: TokenCount) {
+	n.assert('syntax version assignment', 'syntax', '=')
+	switch (n.next()) {
+		case '"proto2"':
+		case "'proto2'":
+			n.assert("syntax version", ";");
+			schema.syntax = 2;
+			return 2;
+		case '"proto3"':
+		case "'proto3'":
+			n.assert("syntax version", ";");
+			schema.syntax = 3;
+			return 3;
 	}
-	throw new SyntaxError(`${n.peek(-2)} is not a valid protobuf syntax version`)
+	throw new SyntaxError(`${n.peek(-1)} is not a valid protobuf syntax version`)
 }
 
-export function onOption<T extends Options>({options}: T, n: TokenCount) {
+export function on_option<T extends Options>({options}: T, n: TokenCount) {
 	let name = '', value = '', paren = false;
 	while (!n.done) switch (n.next()) {
 		case ';':
-			if (options.has(name))
-				throw new SyntaxError(`Duplicate option named ${name} on same options value`)
+			if (options.has(name)) n.syntax_err(`Duplicate option named ${name} on same options value`)
 			options.set(name, value)
 			return;
 
 		case 'option':
 			paren = n.peek() === '('
 			name = n.next(+paren + 1);
-			if (paren && n.next() !== ')') throw new SyntaxError(`Parenthesised options must be closed (name: ${name})`)
+			if (paren && n.next() !== ')') n.syntax_err(`Parenthesised options must be closed (name: ${name})`)
 			if (n.peek()[0] === '.') name += n.next()
 			break;
 
 		case '=':
-			if (name === '') throw new SyntaxError(`Name must be provided for option with value ${n.peek()}`)
+			if (name === '') n.syntax_err(`Name must be provided for option with value ${n.peek()}`)
 			value = n.next()
 			if (name === 'optimize_for') switch (value) {
-				default: throw new SyntaxError(`Unexpected value for option optimize_for: ${value}`)
+				//@ts-ignore
+				default: n.syntax_err(`Unexpected value for option optimize_for: ${value}`)
 				case 'SPEED': case 'CODE_SIZE': case 'LITE_RUNTIME':
 			} else if (value === '{') throw new Error('Map options are currently unimplemented.')
 			break
@@ -179,43 +193,55 @@ export class EnumValue extends Options {
 	constructor(public name: string, public value: number) {super()}
 }
 export class Enum extends Options {
-	values: EnumValue[] = []
+	enums: Enum[] = [];
+	values: EnumValue[] = [];
+	allow_alias: boolean = false;
 	constructor(public name: string) {super()}
 }
-function onEnumValue(e: Enum, n: TokenCount) {
+function on_enum_value({values}: Enum, n: TokenCount) {
 	while (!n.done) switch (n.peek()) {
-		case 'reserved': break;
+		case 'reserved':
+			// nop until we eat through a semicolon
+			while (n.next() !== ';') ;
+			return;
 		default: {
 			let name = n.next()
-			if (n.next() !== '=')
-				throw new SyntaxError(`enum value missing setter value`)
+			n.assert('enum value', '=')
 			let value = +n.next();
 			let ret = new EnumValue(name, value);
-			if (n.peek() === '[') onFieldOptions(ret, n);
-			if (n.next() !== ';')
-				throw new SyntaxError(`enum value missing semicolon`);
+			if (n.peek() === '[') on_inline_options(ret, n);
+			n.assert('enum value', ';')
 
-			e.values.push(ret)
+			values.push(ret)
 			return ret
 		}
 	}
-	throw new SyntaxError(`enum value was not closed before token completion`)
+	throw new SyntaxError(`enum value was not closed before token completion of file`)
 }
 export interface Enums {enums: Enum[]};
-export function onEnum<T extends Enums>({enums}: T, n: TokenCount) {
-	const tenum: Enum = new Enum(n.next(2))
+export function on_enum<T extends Enums>({enums}: T, n: TokenCount, l: Lookup) {
+	const en: Enum = new Enum(n.next(2))
 	n.next()
 	while (!n.done) switch (n.peek()) {
 		case 'option':
-			onOption(tenum, n);
+			on_option(en, n);
+			en.allow_alias = parse_bool(en, "allow_alias", n);
 			break;
 		case '}':
 			n.next(n.peek(0) === ';' ? 2 : 1)
-			enums.push(tenum)
-			return;
+			enums.push(en)
+			l.push({name: en.name, is: 'enum', value: en})
+			return en;
+		case 'enum':
+			{
+				const e = on_enum(en, n, l);
+				l.push({name: `${en.name}.${e.name}`, is: 'enum', value: en})
+			}
+			break;
 		default:
-			onEnumValue(tenum, n)
+			on_enum_value(en, n)
 	}
+	throw new SyntaxError(`enum was not closed before completion of file`)
 }
 
 export class Message extends Options {
@@ -227,77 +253,81 @@ export class Message extends Options {
 	constructor(public name: string) {super()}
 }
 export interface Messages {messages: Message[]}
-export function onMessage<T extends Messages>({messages}: T, c: TokenCount) {
+export function on_message<T extends Messages>({messages}: T, c: TokenCount, l: Lookup) {
 	const m = new Message(c.next(2))
 	let lvl = 0
 	while (!c.done) switch (c.peek()) {
-		case '{': ++lvl; ++c.t; break;
+		case '{': ++lvl; c.next(); break;
 		case '}':
-			++c.t;
+			c.next()
 			if (!--lvl) {
 				messages.push(m);
 				return m
 			}
 			break;
 		case 'map': case 'required': case 'optional': case 'repeated':
-			onField(m, c); break;
-		case 'enum': onEnum(m,c); break;
-		case 'message': onMessage(m, c); break;
-		case 'extensions': onExtensions(m, c); break;
+			on_field(m, c); break;
+		case 'enum': {
+			const e = on_enum(m, c, l);
+			l.push({name: `${m.name}.${e.name}`, is: 'enum', value: e})
+		}
+		break;
+		case 'message': {
+			const me = on_message(m, c, l);
+			l.push({name: `${m.name}.${me.name}`, is: 'message', value: me})
+		}
+		break;
+		case 'extensions': on_extensions(m, c); break;
 		case 'oneof': {
 			let name = c.next(2);
-			if (c.next() !== '{')
-				throw new SyntaxError(`Unexpected oneof token: ${c.peek(-1)}; should be {`);
-
+			c.assert('oneof', '{')
 			while (c.peek() !== '}') {
-				const field = onField(m, c);
+				const field = on_field(m, c);
 				field.oneof = name;
 				field.optional = true;
 			}
-			c.t++;
+			c.next();
 		}
 		break
-		case 'extend': onExtend(m, c); break;
-		case ';': c.t++; break;
+		case 'extend': on_extend(m, c, l); break;
+		case ';': c.next(); break;
 		case 'reserved': case 'option':
-			do ++c.t;
+			do c.next();
 			while (c.peek() !== ';');
 			break;
 
-		default: onField(m, c).optional = true; break;
+		default: on_field(m, c).optional = true; break;
 	}
-	throw new SyntaxError(`message was not closed before token completion`)
+	throw new SyntaxError(`message was not closed before token completion of file`)
 }
-function onExtensions(m: Message, c: TokenCount) {
+function on_extensions(m: Message, c: TokenCount) {
 	const from = +c.next(2)
 	if (isNaN(from))
-		throw new SyntaxError(`Invalid "from" value in extensions definition`)
+		c.syntax_err(`Invalid "from" value in extensions definition`)
 
-	if (c.next() !== 'to') throw new Error("Expected keyword 'to' in extensions definition")
+	if (c.next() !== 'to') c.syntax_err("Expected keyword 'to' in extensions definition")
 	let sto = c.next()
 	const to = sto === 'max' ? MAX_RANGE : +sto
 	if (isNaN(to))
-		throw new SyntaxError(`Invalid "to" value in extensions definition`)
+		c.syntax_err(`Invalid "to" value in extensions definition`)
 
 
-	if (c.next() !== ';')
-		throw new SyntaxError('Missing ; in extensions definition')
+	c.assert('extensions definition', ';')
 	m.extensions = {from, to}
 }
-export class Extends {
-	messages: Message[] = []
-	constructor(public name: string) {}
+export class Extends extends Options {
+	constructor(public name: string, public msg: Message) {super()}
 }
 interface Extendss {extends: Extends[]}
-export function onExtend<T extends Extendss>({extends: extendss}: T, c: TokenCount) {
-	let e = new Extends(c.peek(2))
-	onMessage(e, c)
-	extendss.push(e)
+export function on_extend<T extends Extendss>({extends: ex}: T, c: TokenCount, l: Lookup) {
+	let e = new Extends(c.peek(1), on_message({messages: []}, c, l))
+	ex.push(e)
+	l.push({name: e.name, is: "extends", value: e} as LookupIn<'extends'>)
+	return e
 }
-export function onImport({imports}: Schema, c: TokenCount) {
+export function on_import({imports}: Schema, c: TokenCount) {
 	let file = c.next(2).replace(/^(?:"([^"]+)"|'([^']+)')$/, '$1$2')
-	if (c.next() !== ';')
-		throw new SyntaxError(`Expected ";" after import filename.`)
+	c.assert('after import', ';')
 
 	imports.push(file)
 }
@@ -312,58 +342,54 @@ export class Service extends Options {
 	constructor(public name: string) {super()}
 	methods: RPC[] = []
 }
-export function onService({services}: Schema, c: TokenCount) {
+export function on_service({services}: Schema, c: TokenCount) {
 	const serv = new Service(c.next(2))
-	if (c.next() !== '{')
-		throw new SyntaxError(`Unexpected service token: ${c.peek(-1)}`)
+	c.assert('service', '{')
 
 	while (!c.done) switch (c.peek()) {
 		case '}':
 			c.next();
-			if (c.peek() === ';') c.t++;
+			if (c.peek() === ';') c.next();
 			services.push(serv);
 			return;
 
 		case 'option':
-			onOption(serv, c);
+			on_option(serv, c);
 			break;
 
 		case 'rpc':
-			onRPC(serv, c);
+			on_rpc(serv, c);
 			break;
 	}
 }
-function onRPC({methods}: Service, c: TokenCount) {
-	const e = (...chars: string[]) => {
-		for (const char of chars) if (char !== c.next()) throw new SyntaxError(`Unexpected RPC token: ${c.peek(-1)}; expected "${char}"`)
-	}
+function on_rpc({methods}: Service, c: TokenCount) {
 	const rpc = new RPC(c.next(2))
-	e('(')
+	c.assert("RPC", '(')
 
 	if (c.peek() === 'stream') {
 		rpc.client_streaming = true
-		c.t++
+		c.next()
 	}
 	rpc.input_type = c.next()
-	e(')', 'returns', '(')
+	c.assert("RPC", ')', 'returns', '(')
 
 	if (c.peek() === 'stream') {
 		rpc.server_streaming = true
-		c.t++
+		c.next()
 	}
 	rpc.output_type = c.next()
-	e(')')
+	c.assert("RPC", ')')
 	if (c.peek() === '{') while (!c.done) switch (c.next()) {
 		case '}':
-			if (c.peek() === ';') c.t++
+			if (c.peek() === ';') c.next()
 			methods.push(rpc)
 			return rpc
 
 		case 'option':
-			onOption(rpc, c);
+			on_option(rpc, c);
 			break;
 	} else if (c.peek() === ';') {
-		c.t++;
+		c.next();
 		methods.push(rpc);
 		return rpc
 	}
@@ -378,6 +404,10 @@ export class TokenCount {
 		this.l = tokens.length
 		this.done = this.l === 0
 	}
+	assert(name: string, ...tks: string[]): true {
+		for (const tk of tks) if (tk !== this.next()) this.syntax_err(`Unexpected ${name} token: ${this.peek(-1)} (expected ${tk})`)
+		return true
+	}
 	peek(n = 0) {
 		return this.tokens[this.t + n]
 	}
@@ -385,5 +415,8 @@ export class TokenCount {
 		if (n < 1) throw new RangeError()
 		this.done = this.l === (this.t += n);
 		return this.tokens[this.t - 1];
+	}
+	syntax_err(str: string): never {
+		throw new SyntaxError(str + ` [around token ${this.t} "${this.peek()}"]`)
 	}
 }

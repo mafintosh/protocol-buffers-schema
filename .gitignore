@@ -1,3 +1,4 @@
 node_modules
 incbuild.info
 tsconfig.tsbuildinfo
+lib

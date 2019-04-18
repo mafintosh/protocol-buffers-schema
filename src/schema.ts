@@ -17,7 +17,7 @@ ${this.package && `package ${this.package};`
 }${this.imports.reduce((a, i) => a + `\nimport "${i}";`, '')
 }${this.options.size === 0 ? '' : onOptions(this)
 }${onEnums(this)
-}${this.extends.reduce((a, v) => a + `\nextend ${v.name} {${indent(v.messages.map(e => onFields(e.fields)).join('\n'))}}`, '')
+}${this.extends.reduce((a, v) => a + `\nextend ${v.name} {${indent(onFields(v.msg.fields))}}`, '')
 }${onMessages(this)
 }${onServices(this)}`
 	}
@@ -66,7 +66,25 @@ function onMessages<T extends Messages>({messages}: T) {
 function onFieldValues(fields: MessageField[]) {
 	let s = ''
 	for (const f of fields)
-		s += `\n${f.required ? 'required ' : f.repeated ? 'repeated ' : (f.optional && !f.oneof) ? 'optional ' : ''}${f.type === 'map' && f.map ? `map<${f.map.from}, ${f.map.to}>` : f.type} ${f.name} = ${f.tag}${onOptionsInline(f)};`
+		s += `\n${
+			f.required ?
+			'required ' :
+			f.repeated ?
+			'repeated ' :
+			(f.optional && !f.oneof) ?
+			'optional ' :
+			''
+		}${
+			f.type === 'map' ?
+			`map<${f.map!.from}, ${f.map!.to}>` :
+			f.type
+		} ${
+			f.name
+		} = ${
+			f.tag
+		}${
+			onOptionsInline(f)
+		};`
 	return s;
 }
 function onFields(fields: MessageField[]) {
