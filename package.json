@@ -25,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/ZaneHannanAU/protocol-buffers-schema/issues"
   },
-  "homepage": "https://github.com/ZaneHannanAU/protocol-buffers-schema"
+  "homepage": "https://github.com/ZaneHannanAU/protocol-buffers-schema",
+  "devDependencies": {
+    "@types/node": "^11.13.5"
+  }
 }
