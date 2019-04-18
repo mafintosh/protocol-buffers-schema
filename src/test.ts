@@ -3,7 +3,7 @@ import { parse } from "./parse";
 import {promises as fs} from 'fs';
 import { join, basename } from 'path';
 import { Schema } from "./schema";
-//import {deepStrictEqual as deep_strict_equal} from 'assert'
+import {deepStrictEqual as deep_strict_equal} from 'assert'
 console.log(fs)
 
 
@@ -34,9 +34,11 @@ async function tests() {
 				throw new ReferenceError('Expected error, got schema instead.')
 			}
 		} else {
-			const [, p] = await fixtures(file)
+			const [j, p] = await fixtures(file)
+			let pj = p.toJSON()
 			console.dir(p, {depth: null})
-			console.dir(p.toJSON(), {depth: null})
+			console.dir(j, {depth: null})
+			deep_strict_equal(j, pj, `${file} must be equal to its JSON value.`)
 			console.log(p.toString())
 		}
 		console.groupEnd()

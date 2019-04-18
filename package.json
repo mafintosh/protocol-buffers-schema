@@ -5,7 +5,7 @@
   "main": "lib/parse",
   "scripts": {
     "build": "[ -d lib ] && rm -r lib; [ -f tsconfig.tsbuildinfo ] && rm tsconfig.tsbuildinfo; mkdir -p lib && tsc && for i in lib/*.js; do mv \"$i\" \"lib/$(basename \"$i\" .js).mjs\"; done && tsc -m commonjs",
-    "test": "node lib/test && node --experimental-modules lib/test",
+    "test": "node lib/test # && node --experimental-modules lib/test",
     "build-test": "npm run build && npm run test"
   },
   "repository": {

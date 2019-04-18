@@ -85,7 +85,7 @@ Schema {
   optimize_for: 'SPEED' }
 ```
 
-Note that this example is included as `lib/example`.
+Note that this example is included as [`lib/example`](./lib/example.mjs).
 
 ## API
 
@@ -104,3 +104,9 @@ Converts a parsed schema into its JSON equivalent.
 ## License
 
 MIT
+
+## Testing
+
+Testing is currently done in an automated fashion in [`lib/test`](./lib/test.mjs), relying on files in the [`test/fixtures/`](./test/fixtures/) directory.
+
+Testing should be done both in the browser and in node, for various purposes.
