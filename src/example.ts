@@ -38,7 +38,7 @@ service ServiceName {
 `)
 
 console.log('Parsed:')
-console.debug(parsed)
+console.dir(parsed, {depth: Infinity})
 console.log(JSON.stringify(parsed, null, 2))
 console.log('Stringified:')
 console.log(parsed.toString())

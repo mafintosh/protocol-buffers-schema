@@ -1,119 +1,105 @@
 # protocol-buffers-schema
 
-No nonsense [protocol buffers](https://developers.google.com/protocol-buffers) schema parser written in Javascript
+No nonsense [protocol buffers](https://developers.google.com/protocol-buffers) schema parser written in Typescript
 
 ``` js
-npm install protocol-buffers-schema
+npm install protocol-buffers-schema-ts
 ```
 
-[![build status](http://img.shields.io/travis/mafintosh/protocol-buffers-schema.svg?style=flat)](http://travis-ci.org/mafintosh/protocol-buffers-schema)
+[![build status](http://img.shields.io/travis/ZaneHannanAU/protocol-buffers-schema.svg?style=flat)](http://travis-ci.org/ZaneHannanAU/protocol-buffers-schema)
 
 ## Usage
 
 First save the following file as `example.proto`
 
 ```proto
-syntax = "proto2";
-
-message Point {
-  required int32 x = 1;
-  required int32 y=2;
-  optional string label = 3;
+syntax = "proto3";
+package example;
+option java_package = "com.example";
+option optimize_for = SPEED;
+import "other.proto";
+// example file
+enum Hello {
+  Hello = 0;
+  Welcome = 1;
+  GDay = 2;
+  Yo = 3;
 }
 
-message Line {
-  required Point start = 1;
-  required Point end = 2;
-  optional string label = 3;
+message Test {
+  map<string, string> data = 1;
+  required string hello = 2;
+  oneof test {
+    uint32 age = 3;
+    uint32 year = 4;
+  }
+  message Nested {
+    optional bytes thing = 1;
+  }
+  Nested item = 5;
+  required Hello welcoming = 6;
+  /** A block comment
+    * Longer
+    * Longer
+    */
+  repeated uint32 timings = 7[deprecated=true];
+  repeated uint32 timings_info = 8 [packed=true];
+}
+service ServiceName {
+  rpc MethodName (Hello) returns (Test);
 }
 ```
 
 The run the following example
 
-``` js
-var fs = require('fs')
-var schema = require('protocol-buffers-schema')
+```typescript
+import { readFileSync } from 'fs';
+import { parse } from 'protocol-buffers-schema-ts';
 
-// pass a buffer or string to schema.parse
-var sch = schema.parse(fs.readFileSync('example.proto'))
+// pass a buffer or string (implements Object.toString()) to schema.parse.
+var sch = parse(readFileSync('example.proto'))
 
 // will print out the schema as a javascript object
 console.log(sch)
 ```
 
-Running the above example will print something like
+Running the above example will print something similar to
 
 ``` js
-{
-  syntax: 2,
-  package: null,
-  enums: [],
-  messages: [{
-    name: 'Point',
-    enums: [],
-    messages: [],
-    fields: [{
-      name: 'x',
-      type: 'int32',
-      tag: 1,
-      required: true,
-      repeated: false,
-      options: {}
-    }, {
-      name: 'y',
-      type: 'int32',
-      tag: 2,
-      required: true,
-      repeated: false,
-      options: {}
-    }, {
-      name: 'label',
-      type: 'string',
-      tag: 3,
-      required: false,
-      repeated: false,
-      options: {}
-    }]
-  }, {
-    name: 'Line',
-    enums: [],
-    messages: [],
-    fields: [{
-      name: 'start',
-      type: 'Point',
-      tag: 1,
-      required: true,
-      repeated: false,
-      options: {}
-    }, {
-      name: 'end',
-      type: 'Point',
-      tag: 2,
-      required: true,
-      repeated: false,
-      options: {}
-    }, {
-      name: 'label',
-      type: 'string',
-      tag: 3,
-      required: false,
-      repeated: false,
-      options: {}
-    }]
-  }],
-  options:{}
-}
+Schema {
+  syntax: 3,
+  package: 'example',
+  imports: [ 'other.proto' ],
+  enums:
+   [ Enum { name: 'Hello', enums: [], values: [Array], allow_alias: false } ],
+  messages:
+   [ Message {
+       name: 'Test',
+       enums: [],
+       extends: [],
+       messages: [Array],
+       fields: [Array],
+       extensions: null } ],
+  extends: [],
+  services: [ Service { name: 'ServiceName', methods: [Array] } ],
+  optimize_for: 'SPEED' }
 ```
+
+Note that this example is included as `lib/example`.
 
 ## API
 
-#### `schema.parse(protobufSchemaBufferOrString)`
+### `parse<T extends {toString(): string}>(from: T): Schema`
 
 Parses a .proto schema into a javascript object
 
-#### `schema.stringify(schema)`
+### `Schema.toString()`
 
 Stringifies a parsed schema back into .proto format
+
+### `Schema.toJSON()`
+
+Converts a parsed schema into its JSON equivalent.
 
 ## License
 

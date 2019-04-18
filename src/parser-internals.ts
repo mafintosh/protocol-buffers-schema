@@ -35,12 +35,10 @@ const opts_wm = new WeakMap<Options, NameMappedValueMap>();
 const $emptyarray = Object.freeze([])
 export interface OptionsJSON {[s: string]: string | OptionsJSON;}
 export class Options {
-	public _options_: NameMappedValueMap | undefined;
 	get options(): NameMappedValueMap {
 		let m = opts_wm.get(this);
 		if (!m) {
 			m = new Map;
-			this._options_ = m
 			opts_wm.set(this, m);
 		}
 		return m

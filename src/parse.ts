@@ -68,3 +68,4 @@ export function parse<T extends ToString>(from: T) {
 	}
 	return schema
 }
+export default parse
