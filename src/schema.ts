@@ -1,5 +1,4 @@
-import { Options, Enum, Message, Extends, Service, Enums, EnumValue, Messages, RPC, MessageField } from "./parser-internals";
-
+import { Options, Enum, Message, Extends, Service, Enums, EnumValue, Messages, RPC, MessageField, OptionsJSON } from "./parser-internals";
 const indent: ((s: string) => string) = s => s.replace(/^/gm, '  ')
 export class Schema extends Options {
 	syntax: 2 | 3 = 3;
@@ -15,32 +14,63 @@ export class Schema extends Options {
 `syntax = "proto${this.syntax}";
 ${this.package && `package ${this.package};`
 }${this.imports.reduce((a, i) => a + `\nimport "${i}";`, '')
-}${this.options.size === 0 ? '' : onOptions(this)
+}${onOptions(this)
 }${onEnums(this)
-}${this.extends.reduce((a, v) => a + `\nextend ${v.name} {${indent(onFields(v.msg.fields))}}`, '')
+}${this.extends.reduce((a, v) => a + `\nextend ${v.name} {${indent(onFields(v.msg.fields))}\n}`, '')
 }${onMessages(this)
 }${onServices(this)}`
 	}
 }
-function onOptions<T extends Options>({options}: T): string {
-	let s = ''
-	for (const [k, v] of options)
-		s += `\noption ${k.includes('.') ? `(${k})` : k} = ${v};`
+function traverse(val: OptionsJSON) {
+	let keys = Object.keys(val)
+	if (keys.length === 0) return {path: '', val: ''}
+	if (keys.length > 1) return {path: '', val}
+	let path = keys[0]
+	keys = Object.keys(val = val[path] as OptionsJSON)
+	while (keys.length === 1) {
+		path += '.' + keys[0]
+		if (typeof val[keys[0]] === 'object') {
+			val = val[keys[0]] as OptionsJSON
+			keys = Object.keys(val)
+		} else return {path, val: val[keys[0]]}
+	}
 
+	return { path, val }
+}
+function onOptionsChild(opts: OptionsJSON): string {
+	let s = ''
+	for (const v in opts) s += `\n${v}${
+		typeof opts[v] === 'object' ? ` {${
+			indent(onOptionsChild(opts[v] as OptionsJSON))}\n}` : `: ${opts[v]}`
+	};`
+	return s
+}
+function onOptionsJSON(opts: OptionsJSON): string {
+	let s = ''
+	const {path, val} = traverse(opts)
+	if (path !== '') return `\noption ${path.includes('.') ? `(${path})` : path} = ${typeof val === 'string' ? val : `{${indent(onOptionsChild(val))}\n};`}`
+	else if (typeof val === 'object') for (const v in val) s += `\noption ${v} = ${typeof val[v] === 'string' ? val[v] : `{${indent(onOptionsChild(val[v] as OptionsJSON))}\n}`};`
 	return s;
+}
+function onOptions<T extends Options>({options}: T): string {
+	if (options.size === 0) return ''
+	return onOptionsJSON(Options.intoJSON(options))
 }
 function onOptionsInline<T extends Options>({options}: T) {
 	if (options.size === 0) return ''
 	let a: string[] = []
 	for (const [k, v] of options)
-		a.push(`${k} = ${v}`)
+		a.push(`${k.includes('.') ? `(${k})` : k} = ${v}`)
 	return ` [${a.join(', ')}]`
 }
 function onEnums<T extends Enums>({enums}: T): string {
 	let s = ''
-	for (const {name, values} of enums) {
-		s += `\nenum ${name} {${indent(onEnumValues(values))}\n}`
-	}
+	for (const en of enums)
+		s += `\nenum ${en.name} {${
+			indent(
+				onOptions(en) +
+				onEnumValues(en.values)
+				)}\n}`
 	return s
 }
 function onEnumValues(a: EnumValue[]) {
@@ -51,7 +81,7 @@ function onEnumValues(a: EnumValue[]) {
 }
 function onMessages<T extends Messages>({messages}: T) {
 	let s = ''
-	for (const msg of messages) {
+	for (const msg of messages)
 		s += `\nmessage ${msg.name} {${
 			indent(
 				onOptions(msg) +
@@ -60,7 +90,6 @@ function onMessages<T extends Messages>({messages}: T) {
 				onFields(msg.fields)
 				)
 			}\n}`
-	}
 	return s
 }
 function onFieldValues(fields: MessageField[]) {
@@ -82,9 +111,7 @@ function onFieldValues(fields: MessageField[]) {
 			f.name
 		} = ${
 			f.tag
-		}${
-			onOptionsInline(f)
-		};`
+		}${onOptionsInline(f)};`
 	return s;
 }
 function onFields(fields: MessageField[]) {
@@ -101,19 +128,22 @@ function onFields(fields: MessageField[]) {
 function onRPCs(rpcs: RPC[]) {
 	let s = ''
 	for (const rpc of rpcs)
-		s += `\nrpc (${
+		s += `\nrpc ${rpc.name} (${
 			rpc.client_streaming ? 'stream ' : ''
 		}${rpc.input_type}) returns (${
 			rpc.server_streaming ? 'stream ' : ''
 		}${rpc.output_type})${
-			rpc.options.size ? ` {${indent(onOptions(rpc))}\n}` : ''
+			rpc.options.size > 0 ? ` {${indent(onOptions(rpc))}\n}` : ''
 		};`
 
 	return s;
 }
 function onServices({services}: Schema) {
 	let s = ''
-	for (const {name, methods} of services)
-		s += `\nservice ${name} {${indent(onRPCs(methods))}\n}`
+	for (const srv of services)
+	s += `\nservice ${srv.name} {${indent(
+		onOptions(srv) +
+		onRPCs(srv.methods)
+	)}\n}`
 	return s
 }

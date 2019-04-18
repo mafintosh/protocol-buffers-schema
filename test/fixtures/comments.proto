@@ -16,4 +16,5 @@ message Line {/*
  * Doxygen-style comment
  **/
 message A {
+  optional string url = 1 [default = "https://example.com"];
 }//Comment after closing brace of last message

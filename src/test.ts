@@ -17,9 +17,7 @@ const fixtures = (p: string) => {
 }
 const will_error = new Set([
 	'no-tags',
-	'pheromon-trajectories',
-	'option',
-	'service'
+	'pheromon-trajectories'
 ])
 async function tests() {
 	let dir = await fs.readdir(join(__dirname, '../test/fixtures'))
@@ -36,11 +34,13 @@ async function tests() {
 				throw new ReferenceError('Expected error, got schema instead.')
 			}
 		} else {
-			const fx = await fixtures(file)
-			console.dir(fx, {depth: null})
+			const [, p] = await fixtures(file)
+			console.dir(p, {depth: null})
+			console.dir(p.toJSON(), {depth: null})
+			console.log(p.toString())
 		}
 		console.groupEnd()
 	}
 }
 
-tests()
+tests().catch(console.error).finally(console.groupEnd)

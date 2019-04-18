@@ -32,19 +32,61 @@ const parse_bool = <T extends Options>(m: T, s: string, n: TokenCount) => {
 	return false;
 }
 const opts_wm = new WeakMap<Options, NameMappedValueMap>();
+const $emptyarray = Object.freeze([])
+export interface OptionsJSON {[s: string]: string | OptionsJSON;}
 export class Options {
+	public _options_: NameMappedValueMap | undefined;
 	get options(): NameMappedValueMap {
 		let m = opts_wm.get(this);
 		if (!m) {
 			m = new Map;
+			this._options_ = m
 			opts_wm.set(this, m);
 		}
 		return m
 	}
+	static intoJSON(opts: NameMappedValueMap) {
+		const o: OptionsJSON = {}
+		for (const [k, v] of Array.from(opts).sort())
+			if (v === '{}') {
+				let c = o as OptionsJSON
+				for (const v of k.split('.')) c = (
+					'object' === typeof c[v] ? c[v] as OptionsJSON : (c[v] = {})
+				);
+			} else if (k.includes('.')) {
+				let c = o
+				let kv = k.split('.')
+				let last = kv.pop()!
+				for (const ke of kv) switch (typeof c[ke]) {
+					case 'object': c = c[ke] as OptionsJSON; break;
+					case 'string': throw new SyntaxError('bad key for string');
+					case 'undefined': c = (c[ke] = {});
+				}
+				c[last] = v
+			} else o[k] = v;
+		return o
+	}
 	toJSON() {
-		const options: {[s: string]: string} = {}
-		if (opts_wm.has(this)) for (const [k, v] of opts_wm.get(this)!) options[k] = v
-		return { ...this, options }
+		const j: Exclude<any, 'options'> = {}
+		for (const k in this) {
+			if (Array.isArray(this[k])) {
+				//@ts-ignore
+				if (this[k].length && 'object' === typeof this[k][0])
+					//@ts-ignore
+					j[k] = Array.from(this[k], v => v.toJSON ? v.toJSON() : v)
+				else j[k] = $emptyarray
+			} else {
+				j[k] = this[k] && (
+					'object' === typeof this[k] ? (
+						//@ts-ignore
+						'function' === typeof this[k].toJSON ? this[k].toJSON() : this[k]
+					) : this[k]
+				)
+			}
+		}
+		if (opts_wm.has(this))
+			return {...j, options: Options.intoJSON(opts_wm.get(this)!)}
+		else return {...j, options: {}}
 	}
 }
 export class MessageField extends Options {
@@ -162,30 +204,70 @@ export function on_syntax_version(schema: Schema, n: TokenCount) {
 	}
 	throw new SyntaxError(`${n.peek(-1)} is not a valid protobuf syntax version`)
 }
-
+function on_map_options(options: NameMappedValueMap, prefix: string, n: TokenCount) {
+	let paren = false
+	while (!n.done) switch (n.peek()) {
+		case '}': n.next(); return;
+		case ';': throw n.syntax_err('Unexpected end of map options')
+		//@ts-ignore
+		case '(':
+			n.next()
+			paren = true
+		default: {
+			let key = `${prefix}.${n.next()}`
+			if (options.has(key)) n.syntax_err(`Duplicate option named ${key} on same options value`)
+			if (paren) n.assert('map options paren', ')')
+			if (n.peek() === ':') n.next()
+			if (n.peek() === '{') {
+				n.next()
+				on_map_options(options, key, n)
+				let l = key.lastIndexOf('.')
+				while (l > -1 && key) {
+					key = key.slice(0, l)
+					l = key.lastIndexOf('.')
+					if (options.has(key) && options.get(key) !== '{}') n.syntax_err(`Duplicate option named ${key} on same options value`)
+					else options.set(key, '{}')
+				}
+			} else options.set(key, n.next())
+			if (n.peek() === ';') n.next()
+			paren = false
+		}
+	}
+}
 export function on_option<T extends Options>({options}: T, n: TokenCount) {
-	let name = '', value = '', paren = false;
+	let key = '', value = '', paren = false;
 	while (!n.done) switch (n.next()) {
 		case ';':
-			if (options.has(name)) n.syntax_err(`Duplicate option named ${name} on same options value`)
-			options.set(name, value)
+			if (options.has(key) && options.get(key) !== '{}') n.syntax_err(`Duplicate option named ${key} on same options value`)
+			if (key.includes('.')) {
+				options.set(key, value)
+				let l = key.lastIndexOf('.')
+				while (l > -1 && key) {
+					key = key.slice(0, l)
+					l = key.lastIndexOf('.')
+					if (options.has(key) && options.get(key) !== '{}') n.syntax_err(`Duplicate option named ${key} on same options value`)
+					else options.set(key, '{}')
+				}
+			} else options.set(key, value)
 			return;
 
 		case 'option':
 			paren = n.peek() === '('
-			name = n.next(+paren + 1);
-			if (paren && n.next() !== ')') n.syntax_err(`Parenthesised options must be closed (name: ${name})`)
-			if (n.peek()[0] === '.') name += n.next()
+			key = n.next(paren ? 2 : 1);
+			if (paren) n.assert('parenthesised options', ')')
+			if (n.peek()[0] === '.') key += n.next()
 			break;
 
 		case '=':
-			if (name === '') n.syntax_err(`Name must be provided for option with value ${n.peek()}`)
+			if (key === '') n.syntax_err(`Name must be provided for option with value ${n.peek()}`)
 			value = n.next()
-			if (name === 'optimize_for') switch (value) {
-				//@ts-ignore
-				default: n.syntax_err(`Unexpected value for option optimize_for: ${value}`)
+			if (key === 'optimize_for') switch (value) {
+				default: throw new SyntaxError(`Unexpected value for option optimize_for: ${value}`)
 				case 'SPEED': case 'CODE_SIZE': case 'LITE_RUNTIME':
-			} else if (value === '{') throw new Error('Map options are currently unimplemented.')
+			} else if (value === '{') {
+				value = '{}'
+				on_map_options(options, key, n)
+			}
 			break
 	}
 }
@@ -379,12 +461,15 @@ function on_rpc({methods}: Service, c: TokenCount) {
 	}
 	rpc.output_type = c.next()
 	c.assert("RPC", ')')
-	if (c.peek() === '{') while (!c.done) switch (c.next()) {
+	if (c.peek() === '{') while (!c.done) switch (c.peek()) {
 		case '}':
-			if (c.peek() === ';') c.next()
+			if (c.assert('rpc close', '}') && c.peek() === ';') c.next()
 			methods.push(rpc)
 			return rpc
 
+		case '{':
+			c.assert('rpc option open', '{')
+			break
 		case 'option':
 			on_option(rpc, c);
 			break;
