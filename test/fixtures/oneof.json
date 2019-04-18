@@ -1,6 +1,6 @@
 {
   "syntax": 3,
-  "package": null,
+  "package": "",
   "imports": [],
   "enums": [],
   "messages": [
@@ -18,6 +18,9 @@
           "oneof": "test_oneof",
           "required": false,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": true,
           "options": {}
         },
         {
@@ -28,13 +31,18 @@
           "oneof": "test_oneof",
           "required": false,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": true,
           "options": {}
         }
-
       ],
-      "extensions": null
+      "extensions": null,
+      "options": {}
     }
   ],
-  "options": {},
-  "extends": []
+  "extends": [],
+  "services": [],
+  "optimize_for": "AUTO",
+  "options": {}
 }

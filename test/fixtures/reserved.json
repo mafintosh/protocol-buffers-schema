@@ -1,14 +1,11 @@
 {
   "syntax": 3,
-  "package": null,
+  "package": "",
   "imports": [],
   "enums": [],
-  "extends": [],
-  "options": {},
   "messages": [
     {
       "name": "Reserved",
-      "extensions": null,
       "enums": [],
       "extends": [],
       "messages": [],
@@ -18,9 +15,12 @@
           "type": "string",
           "tag": 1,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": false,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": true,
           "options": {}
         },
         {
@@ -28,12 +28,21 @@
           "type": "string",
           "tag": 10,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": false,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": true,
           "options": {}
         }
-      ]
+      ],
+      "extensions": null,
+      "options": {}
     }
-  ]
+  ],
+  "extends": [],
+  "services": [],
+  "optimize_for": "AUTO",
+  "options": {}
 }

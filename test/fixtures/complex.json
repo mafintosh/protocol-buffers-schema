@@ -3,120 +3,168 @@
   "package": "tutorial",
   "imports": [],
   "enums": [],
-  "messages": [{
-    "name": "Person",
-    "enums": [{
-      "name": "PhoneType",
-      "values": {
-        "MOBILE": {
-          "value": 0,
+  "messages": [
+    {
+      "name": "Person",
+      "enums": [
+        {
+          "name": "PhoneType",
+          "enums": [],
+          "values": [
+            {
+              "name": "MOBILE",
+              "value": 0,
+              "options": {
+                "some_enum_option": "true"
+              }
+            },
+            {
+              "name": "HOME",
+              "value": 1,
+              "options": {}
+            },
+            {
+              "name": "WORK",
+              "value": 2,
+              "options": {}
+            }
+          ],
+          "allow_alias": true,
           "options": {
-            "some_enum_option": "true"
+            "allow_alias": "true",
+            "custom_option": "true"
           }
-        },
-        "HOME": {
-          "value": 1,
-          "options": {}
-        },
-        "WORK": {
-          "value": 2,
+        }
+      ],
+      "extends": [],
+      "messages": [
+        {
+          "name": "PhoneNumber",
+          "enums": [],
+          "extends": [],
+          "messages": [],
+          "fields": [
+            {
+              "name": "number",
+              "type": "string",
+              "tag": 1,
+              "map": null,
+              "oneof": "",
+              "required": true,
+              "repeated": false,
+              "deprecated": false,
+              "packed": false,
+              "optional": false,
+              "options": {}
+            },
+            {
+              "name": "type",
+              "type": "PhoneType",
+              "tag": 2,
+              "map": null,
+              "oneof": "",
+              "required": false,
+              "repeated": false,
+              "deprecated": false,
+              "packed": false,
+              "optional": false,
+              "options": {
+                "default": "HOME"
+              }
+            }
+          ],
+          "extensions": null,
           "options": {}
         }
-      },
-      "options": {
-        "allow_alias": true,
-        "custom_option": true
-      }
-    }],
-    "extends": [],
-    "messages": [{
-      "name": "PhoneNumber",
+      ],
+      "fields": [
+        {
+          "name": "name",
+          "type": "string",
+          "tag": 1,
+          "map": null,
+          "oneof": "",
+          "required": true,
+          "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
+          "options": {}
+        },
+        {
+          "name": "id",
+          "type": "int32",
+          "tag": 2,
+          "map": null,
+          "oneof": "",
+          "required": true,
+          "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
+          "options": {}
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "tag": 3,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
+          "options": {}
+        },
+        {
+          "name": "phone",
+          "type": "PhoneNumber",
+          "tag": 4,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
+          "options": {}
+        }
+      ],
+      "extensions": null,
+      "options": {}
+    },
+    {
+      "name": "AddressBook",
       "enums": [],
       "extends": [],
       "messages": [],
-      "fields": [{
-        "name": "number",
-        "type": "string",
-        "tag": 1,
-        "map": null,
-        "oneof": null,
-        "required": true,
-        "repeated": false,
-        "options": {}
-      }, {
-        "name": "type",
-        "type": "PhoneType",
-        "tag": 2,
-        "map": null,
-        "oneof": null,
-        "required": false,
-        "repeated": false,
-        "options": {
-          "default": "HOME"
+      "fields": [
+        {
+          "name": "person",
+          "type": "Person",
+          "tag": 1,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
+          "options": {}
         }
-      }],
-      "extensions": null
-    }],
-    "fields": [{
-      "name": "name",
-      "type": "string",
-      "tag": 1,
-      "map": null,
-      "oneof": null,
-      "required": true,
-      "repeated": false,
+      ],
+      "extensions": null,
       "options": {}
-    }, {
-      "name": "id",
-      "type": "int32",
-      "tag": 2,
-      "map": null,
-      "oneof": null,
-      "required": true,
-      "repeated": false,
-      "options": {}
-    }, {
-      "name": "email",
-      "type": "string",
-      "tag": 3,
-      "map": null,
-      "oneof": null,
-      "required": false,
-      "repeated": false,
-      "options": {}
-    }, {
-      "name": "phone",
-      "type": "PhoneNumber",
-      "tag": 4,
-      "map": null,
-      "oneof": null,
-      "required": false,
-      "repeated": true,
-      "options": {}
-    }],
-    "extensions": null
-  }, {
-    "name": "AddressBook",
-    "enums": [],
-    "extends": [],
-    "messages": [],
-    "fields": [{
-      "name": "person",
-      "type": "Person",
-      "tag": 1,
-      "map": null,
-      "oneof": null,
-      "required": false,
-      "repeated": true,
-      "options": {}
-    }],
-    "extensions": null
-  }],
+    }
+  ],
+  "extends": [],
+  "services": [],
+  "optimize_for": "SPEED",
   "options": {
-    "java_package": "com.mafintosh.generated",
-    "java_outer_classname": "Example",
-    "java_generate_equals_and_hash": true,
+    "java_generate_equals_and_hash": "true",
+    "java_outer_classname": "\"Example\"",
+    "java_package": "\"com.mafintosh.generated\"",
     "optimize_for": "SPEED"
-  },
-  "extends": []
+  }
 }

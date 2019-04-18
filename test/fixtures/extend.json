@@ -1,6 +1,6 @@
 {
   "syntax": 3,
-  "package": null,
+  "package": "",
   "imports": [],
   "enums": [],
   "messages": [
@@ -15,9 +15,12 @@
           "type": "int32",
           "tag": 1,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": true,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
           "options": {}
         },
         {
@@ -25,9 +28,12 @@
           "type": "string",
           "tag": 2,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": false,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
           "options": {}
         },
         {
@@ -35,9 +41,12 @@
           "type": "int32",
           "tag": 3,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": true,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
           "options": {}
         },
         {
@@ -45,9 +54,12 @@
           "type": "int32",
           "tag": 101,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": false,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
           "options": {}
         },
         {
@@ -55,13 +67,17 @@
           "type": "string",
           "tag": 102,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": false,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
           "options": {}
         }
       ],
-      "extensions": null
+      "extensions": null,
+      "options": {}
     },
     {
       "name": "MsgExtend",
@@ -74,9 +90,12 @@
           "type": "int32",
           "tag": 1,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": true,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
           "options": {}
         },
         {
@@ -84,9 +103,12 @@
           "type": "string",
           "tag": 2,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": false,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
           "options": {}
         },
         {
@@ -94,9 +116,12 @@
           "type": "int32",
           "tag": 3,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": true,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
           "options": {}
         },
         {
@@ -104,9 +129,12 @@
           "type": "int32",
           "tag": 101,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": false,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
           "options": {}
         },
         {
@@ -114,23 +142,26 @@
           "type": "string",
           "tag": 102,
           "map": null,
-          "oneof": null,
+          "oneof": "",
           "required": false,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
           "options": {}
         }
       ],
       "extensions": {
         "from": 100,
         "to": 200
-      }
+      },
+      "options": {}
     }
   ],
-  "options": {},
   "extends": [
     {
       "name": "MsgExtend",
-      "message": {
+      "msg": {
         "name": "MsgExtend",
         "enums": [],
         "extends": [],
@@ -141,9 +172,12 @@
             "type": "int32",
             "tag": 101,
             "map": null,
-            "oneof": null,
+            "oneof": "",
             "required": false,
             "repeated": false,
+            "deprecated": false,
+            "packed": false,
+            "optional": false,
             "options": {}
           },
           {
@@ -151,14 +185,22 @@
             "type": "string",
             "tag": 102,
             "map": null,
-            "oneof": null,
+            "oneof": "",
             "required": false,
             "repeated": false,
+            "deprecated": false,
+            "packed": false,
+            "optional": false,
             "options": {}
           }
         ],
-        "extensions": null
-      }
+        "extensions": null,
+        "options": {}
+      },
+      "options": {}
     }
-  ]
+  ],
+  "services": [],
+  "optimize_for": "AUTO",
+  "options": {}
 }

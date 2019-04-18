@@ -1,6 +1,6 @@
 {
   "syntax": 3,
-  "package": null,
+  "package": "",
   "imports": [],
   "enums": [],
   "messages": [
@@ -13,20 +13,26 @@
         {
           "name": "data",
           "type": "map",
+          "tag": 1,
           "map": {
             "from": "string",
             "to": "bytes"
           },
-          "oneof": null,
-          "tag": 1,
+          "oneof": "",
           "required": false,
           "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
           "options": {}
         }
       ],
-      "extensions": null
+      "extensions": null,
+      "options": {}
     }
   ],
-  "options": {},
-  "extends": []
+  "extends": [],
+  "services": [],
+  "optimize_for": "AUTO",
+  "options": {}
 }

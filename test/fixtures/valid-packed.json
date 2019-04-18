@@ -1,1 +1,294 @@
-{}
+{
+  "syntax": 3,
+  "package": "",
+  "imports": [],
+  "enums": [],
+  "messages": [
+    {
+      "name": "EnumCarrying",
+      "enums": [
+        {
+          "name": "E",
+          "enums": [],
+          "values": [
+            {
+              "name": "A",
+              "value": 0,
+              "options": {}
+            },
+            {
+              "name": "B",
+              "value": 1,
+              "options": {}
+            }
+          ],
+          "allow_alias": false,
+          "options": {}
+        }
+      ],
+      "extends": [],
+      "messages": [],
+      "fields": [],
+      "extensions": null,
+      "options": {}
+    },
+    {
+      "name": "ValidPacked",
+      "enums": [
+        {
+          "name": "Corpus",
+          "enums": [],
+          "values": [
+            {
+              "name": "UNIVERSAL",
+              "value": 0,
+              "options": {}
+            },
+            {
+              "name": "WEB",
+              "value": 1,
+              "options": {}
+            }
+          ],
+          "allow_alias": false,
+          "options": {}
+        }
+      ],
+      "extends": [],
+      "messages": [],
+      "fields": [
+        {
+          "name": "f1",
+          "type": "int32",
+          "tag": 1,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f2",
+          "type": "int64",
+          "tag": 2,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f3",
+          "type": "uint32",
+          "tag": 3,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f4",
+          "type": "uint64",
+          "tag": 4,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f5",
+          "type": "sint32",
+          "tag": 5,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f6",
+          "type": "sint64",
+          "tag": 6,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f7",
+          "type": "bool",
+          "tag": 7,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f8",
+          "type": "Corpus",
+          "tag": 8,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f9",
+          "type": "EnumCarrying.E",
+          "tag": 9,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f10",
+          "type": "fixed64",
+          "tag": 10,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f11",
+          "type": "sfixed64",
+          "tag": 11,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f12",
+          "type": "double",
+          "tag": 12,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f13",
+          "type": "fixed32",
+          "tag": 13,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f14",
+          "type": "sfixed32",
+          "tag": 14,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        },
+        {
+          "name": "f15",
+          "type": "float",
+          "tag": 15,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": true,
+          "deprecated": false,
+          "packed": true,
+          "optional": false,
+          "options": {
+            "packed": "true"
+          }
+        }
+      ],
+      "extensions": null,
+      "options": {}
+    }
+  ],
+  "extends": [],
+  "services": [],
+  "optimize_for": "AUTO",
+  "options": {}
+}

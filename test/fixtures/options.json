@@ -1,45 +1,62 @@
 {
   "syntax": 3,
-  "package": null,
+  "package": "",
   "imports": [],
   "enums": [],
-  "messages": [{
-    "name": "OptionFields",
-    "enums": [],
-    "extends": [],
-    "messages": [],
-    "fields": [{
-      "name": "type",
-      "type": "string",
-      "tag": 2,
-      "map": null,
-      "oneof": null,
-      "required": false,
-      "repeated": false,
-      "options": {
-        "mylist": "\"some,values,[here]\""
-      }
-    }],
-    "extensions": null
-  }, {
-    "name": "MoreOptionFields",
-    "enums": [],
-    "extends": [],
-    "messages": [],
-    "fields": [{
-      "name": "values",
-      "type": "string",
-      "tag": 3,
-      "map": null,
-      "oneof": null,
-      "required": false,
-      "repeated": false,
-      "options": {
-        "mylist2": "'[more,values],[here]'"
-      }
-    }],
-    "extensions": null
-  }],
-  "options": {},
-  "extends": []
+  "messages": [
+    {
+      "name": "OptionFields",
+      "enums": [],
+      "extends": [],
+      "messages": [],
+      "fields": [
+        {
+          "name": "type",
+          "type": "string",
+          "tag": 2,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
+          "options": {
+            "mylist": "\"some,values,[here]\""
+          }
+        }
+      ],
+      "extensions": null,
+      "options": {}
+    },
+    {
+      "name": "MoreOptionFields",
+      "enums": [],
+      "extends": [],
+      "messages": [],
+      "fields": [
+        {
+          "name": "values",
+          "type": "string",
+          "tag": 3,
+          "map": null,
+          "oneof": "",
+          "required": false,
+          "repeated": false,
+          "deprecated": false,
+          "packed": false,
+          "optional": false,
+          "options": {
+            "mylist2": "'[more, values], [here]'"
+          }
+        }
+      ],
+      "extensions": null,
+      "options": {}
+    }
+  ],
+  "extends": [],
+  "services": [],
+  "optimize_for": "AUTO",
+  "options": {}
 }
