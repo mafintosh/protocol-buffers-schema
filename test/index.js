@@ -144,3 +144,8 @@ tape('custom options parse', function (t) {
   t.same(schema.parse(fixture('option.proto')), require('./fixtures/option.json'))
   t.end()
 })
+
+tape('escaped quotes in option value parse', function (t) {
+  t.same(schema.parse(fixture('escaped-quotes.proto')), require('./fixtures/escaped-quotes.json'))
+  t.end()
+})

@@ -571,7 +571,7 @@ var parse = function (buf) {
       // look ahead for the closing quote and collapse all
       // in-between tokens into a single token
       for (j; j < tokens.length; j++) {
-        if (/^([^'"]*)("|')$/.test(tokens[j])) {
+        if (/^[^'"\\]*(?:\\.[^'"\\]*)*("|')$/.test(tokens[j])) {
           tokens = tokens.slice(0, i).concat(tokens.slice(i, j + 1).join('')).concat(tokens.slice(j + 1))
           break
         }
