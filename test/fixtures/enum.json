@@ -33,6 +33,7 @@
     }],
     "extends": [],
     "messages": [],
+    "options": {},
     "fields": [],
     "extensions": null
   }],

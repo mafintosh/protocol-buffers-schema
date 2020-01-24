@@ -11,6 +11,7 @@
       "extends": [],
       "messages": [],
       "extensions": null,
+      "options": {},
       "fields": [
         {
           "name": "x",
@@ -49,6 +50,7 @@
       "enums": [],
       "extends": [],
       "extensions": null,
+      "options": {},
       "messages": [],
       "fields": [
         {

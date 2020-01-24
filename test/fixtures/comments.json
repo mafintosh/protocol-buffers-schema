@@ -10,6 +10,7 @@
       "enums": [],
       "extends": [],
       "messages": [],
+      "options": {},
       "extensions": null,
       "fields": [
         {
@@ -48,6 +49,7 @@
       "name": "Line",
       "enums": [],
       "extends": [],
+      "options": {},
       "extensions": null,
       "messages": [],
       "fields": [
@@ -87,6 +89,7 @@
       "name": "A",
       "enums": [],
       "extends": [],
+      "options": {},
       "messages": [],
       "fields": [],
       "extensions": null
