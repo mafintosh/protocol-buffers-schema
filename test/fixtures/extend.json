@@ -8,6 +8,7 @@
       "name": "MsgNormal",
       "enums": [],
       "extends": [],
+      "options": {},
       "messages": [],
       "fields": [
         {
@@ -68,6 +69,7 @@
       "enums": [],
       "extends": [],
       "messages": [],
+      "options": {},
       "fields": [
         {
           "name": "field1",
@@ -134,6 +136,7 @@
         "name": "MsgExtend",
         "enums": [],
         "extends": [],
+        "options": {},
         "messages": [],
         "fields": [
           {

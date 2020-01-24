@@ -52,6 +52,7 @@ Running the above example will print something like
     name: 'Point',
     enums: [],
     messages: [],
+    options: {},
     fields: [{
       name: 'x',
       type: 'int32',
@@ -78,6 +79,7 @@ Running the above example will print something like
     name: 'Line',
     enums: [],
     messages: [],
+    options: {},
     fields: [{
       name: 'start',
       type: 'Point',

@@ -10,6 +10,7 @@
       "enums": [],
       "extends": [],
       "messages": [],
+      "options": {},
       "extensions": null,
       "fields": [
         {
@@ -50,6 +51,7 @@
       "extends": [],
       "extensions": null,
       "messages": [],
+      "options": {},
       "fields": [
         {
           "name": "start",

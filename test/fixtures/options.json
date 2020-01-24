@@ -8,6 +8,7 @@
     "enums": [],
     "extends": [],
     "messages": [],
+    "options": {},
     "fields": [{
       "name": "type",
       "type": "string",
@@ -26,6 +27,7 @@
     "enums": [],
     "extends": [],
     "messages": [],
+    "options": {},
     "fields": [{
       "name": "values",
       "type": "string",

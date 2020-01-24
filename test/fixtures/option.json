@@ -30,6 +30,9 @@
       "enums": [],
       "extends": [],
       "messages": [],
+      "options": {
+        "my_message_option": "1234"
+      },
       "fields": [
         {
           "name": "foo",
@@ -61,6 +64,7 @@
       "enums": [],
       "extends": [],
       "messages": [],
+      "options": {},
       "fields": [],
       "extensions": null
     },
@@ -68,6 +72,7 @@
       "name": "ResponseType",
       "enums": [],
       "extends": [],
+      "options": {},
       "messages": [],
       "fields": [],
       "extensions": null
@@ -84,6 +89,7 @@
         "enums": [],
         "extends": [],
         "messages": [],
+        "options": {},
         "fields": [
           {
             "name": "my_file_option",
@@ -106,6 +112,7 @@
         "enums": [],
         "extends": [],
         "messages": [],
+        "options": {},
         "fields": [
           {
             "name": "my_message_option",
@@ -128,6 +135,7 @@
         "enums": [],
         "extends": [],
         "messages": [],
+        "options": {},
         "fields": [
           {
             "name": "my_field_option",
@@ -150,6 +158,7 @@
         "enums": [],
         "extends": [],
         "messages": [],
+        "options": {},
         "fields": [
           {
             "name": "my_enum_option",
@@ -172,6 +181,7 @@
         "enums": [],
         "extends": [],
         "messages": [],
+        "options": {},
         "fields": [
           {
             "name": "my_enum_value_option",
@@ -194,6 +204,7 @@
         "enums": [],
         "extends": [],
         "messages": [],
+        "options": {},
         "fields": [
           {
             "name": "my_service_option",
@@ -216,6 +227,7 @@
         "enums": [],
         "extends": [],
         "messages": [],
+        "options": {},
         "fields": [
           {
             "name": "my_method_option",

@@ -9,6 +9,7 @@
       "enums": [],
       "extends": [],
       "messages": [],
+      "options": {},
       "fields": [
         {
           "name": "name",
