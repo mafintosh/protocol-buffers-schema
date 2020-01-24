@@ -109,6 +109,7 @@ var onfield = function (tokens) {
 var onmessagebody = function (tokens) {
   var body = {
     enums: [],
+    options: {},
     messages: [],
     fields: [],
     extends: [],
@@ -159,11 +160,16 @@ var onmessagebody = function (tokens) {
         break
 
       case 'reserved':
-      case 'option':
         tokens.shift()
         while (tokens[0] !== ';') {
           tokens.shift()
         }
+        break
+
+      case 'option':
+        var opt = onoption(tokens)
+        if (body.options[opt.name] !== undefined) throw new Error('Duplicate option ' + opt.name)
+        body.options[opt.name] = opt.value
         break
 
       default:
@@ -205,6 +211,7 @@ var onmessage = function (tokens) {
   var body = []
   var msg = {
     name: tokens.shift(),
+    options: {},
     enums: [],
     extends: [],
     messages: [],
@@ -226,6 +233,7 @@ var onmessage = function (tokens) {
       msg.fields = body.fields
       msg.extends = body.extends
       msg.extensions = body.extensions
+      msg.options = body.options
       return msg
     }
 

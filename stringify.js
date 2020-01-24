@@ -16,6 +16,9 @@ var onfield = function (f, result) {
 var onmessage = function (m, result) {
   result.push('message ' + m.name + ' {')
 
+  if (!m.options) m.options = {}
+  onoption(m.options, result)
+
   if (!m.enums) m.enums = []
   m.enums.forEach(function (e) {
     result.push(onenum(e, []))
