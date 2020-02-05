@@ -14,12 +14,12 @@ var PACKABLE_TYPES = [
 ]
 
 var onfieldoptionvalue = function (tokens) {
-  let value = tokens.shift()
+  var value = tokens.shift()
   if (value !== '{') {
     return value
   }
   value = {}
-  let field = ''
+  var field = ''
   while (tokens.length) {
     switch (tokens[0]) {
       case '}':
@@ -48,8 +48,8 @@ var onfieldoptions = function (tokens) {
           name = tokens.shift()
           tokens.shift() // remove the end of bracket
         }
-        let field = []
-        if (tokens[0].startsWith('.')) {
+        var field = []
+        if (tokens[0][0] === '.') {
           field = tokens[0].substr(1).split('.')
           tokens.shift()
         }
@@ -59,11 +59,11 @@ var onfieldoptions = function (tokens) {
 
         // for option (A).b.c
         // path will be ['A', 'b'] and lastFieldName 'c'
-        const path = [name, ...field]
-        const lastFieldName = path.pop()
+        var path = [name].concat(field)
+        var lastFieldName = path.pop()
 
         // opt references opts.A.b
-        const opt = path.reduce((opt, n, index) => {
+        var opt = path.reduce(function (opt, n, index) {
           if (opt[n] == null) {
             opt[n] = {}
           }
