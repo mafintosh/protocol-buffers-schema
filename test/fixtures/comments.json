@@ -81,7 +81,9 @@
           "oneof": null,
           "required": false,
           "repeated": false,
-          "options": {}
+          "options": {
+            "default": "\"http://127.0.0.1\""
+          }
         }
       ]
     },
