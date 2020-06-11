@@ -76,6 +76,76 @@
       "messages": [],
       "fields": [],
       "extensions": null
+    },
+    {
+      "name": "FooOptions",
+      "enums": [],
+      "extends": [],
+      "options": {},
+      "messages": [],
+      "fields": [
+        {
+          "name": "opt1",
+          "type": "int32",
+          "tag": 1,
+          "map": null,
+          "oneof": null,
+          "required": false,
+          "repeated": false,
+          "options": {}
+        },
+        {
+          "name": "opt2",
+          "type": "string",
+          "tag": 2,
+          "map": null,
+          "oneof": null,
+          "required": false,
+          "repeated": false,
+          "options": {}
+        }
+      ],
+      "extensions": null
+    },
+    {
+      "name": "Bar",
+      "enums": [],
+      "extends": [],
+      "options": {},
+      "messages": [],
+      "fields": [
+        {
+          "name": "a",
+          "type": "int32",
+          "tag": 1,
+          "map": null,
+          "oneof": null,
+          "required": false,
+          "repeated": false,
+          "options": {
+            "foo_options": {
+              "opt1": "123",
+              "opt2": "\"baz\""
+            }
+          }
+        },
+        {
+          "name": "b",
+          "type": "int32",
+          "tag": 2,
+          "map": null,
+          "oneof": null,
+          "required": false,
+          "repeated": false,
+          "options": {
+            "foo_options": {
+              "opt1": "123",
+              "opt2": "\"baz\""
+            }
+          }
+        }
+      ],
+      "extensions": null
     }
   ],
   "options": {
@@ -233,6 +303,29 @@
             "name": "my_method_option",
             "type": "MyMessage",
             "tag": 50006,
+            "map": null,
+            "oneof": null,
+            "required": false,
+            "repeated": false,
+            "options": {}
+          }
+        ],
+        "extensions": null
+      }
+    },
+    {
+      "name": "google.protobuf.FieldOptions",
+      "message": {
+        "name": "google.protobuf.FieldOptions",
+        "enums": [],
+        "extends": [],
+        "messages": [],
+        "options": {},
+        "fields": [
+          {
+            "name": "foo_options",
+            "type": "FooOptions",
+            "tag": 1234,
             "map": null,
             "oneof": null,
             "required": false,
