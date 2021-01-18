@@ -149,7 +149,7 @@
     }
   ],
   "options": {
-    "my_file_option": "Helloworld!"
+    "my_file_option": "Hello world!"
   },
   "extends": [
     {
@@ -349,7 +349,7 @@
           "server_streaming": false,
           "options": {
             "my_method_option.foo": "567",
-            "my_method_option.bar": "Somestring"
+            "my_method_option.bar": "Some string"
           }
         }
       ],
