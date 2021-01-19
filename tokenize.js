@@ -34,7 +34,7 @@ module.exports = function (sch) {
   var restoreQuotedLines = function (list) {
     var re = /^\$(\d+)\$$/
     return function (line) {
-      let m = line.match(re)
+      var m = line.match(re)
       return m ? list[+m[1]] : line
     }
   }
