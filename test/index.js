@@ -79,6 +79,13 @@ tape('schema with map', function (t) {
   t.end()
 })
 
+tape('schema with map + stringify', function (t) {
+  var mapFixture = fixture('map.proto')
+  var stringified = schema.stringify(schema.parse(mapFixture)).slice('syntax = "proto3";\n'.length).trim()
+  t.same(stringified, mapFixture.trim())
+  t.end()
+})
+
 tape('schema with syntax version', function (t) {
   t.same(schema.parse(fixture('version.proto')), require('./fixtures/version.json'))
   t.end()
