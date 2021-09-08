@@ -1,5 +1,5 @@
 var onimport = function (i, result) {
-  result.push('import ' + i + '";', '')
+  result.push('import "' + i + '";', '')
   return result
 }
 
