@@ -109,7 +109,7 @@ Running the above example will print something like
 
 ## API
 
-#### `schema.parse(protobufSchemaBufferOrString)`
+#### `schema.parse(protobufSchemaAsStringOrUint8Array)`
 
 Parses a .proto schema into a javascript object
 

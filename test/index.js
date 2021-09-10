@@ -7,8 +7,18 @@ var fixture = function (name) {
   return fs.readFileSync(path.join(__dirname, 'fixtures', name), 'utf-8')
 }
 
+var fixtureBytes = function (name) {
+  var content = fs.readFileSync(path.join(__dirname, 'fixtures', name))
+  return new Uint8Array(content.buffer, content.byteOffset, content.byteLength)
+}
+
 tape('basic parse', function (t) {
   t.same(schema.parse(fixture('basic.proto')), require('./fixtures/basic.json'))
+  t.end()
+})
+
+tape('basic parse (bytes)', function (t) {
+  t.same(schema.parse(fixtureBytes('basic.proto')), require('./fixtures/basic.json'))
   t.end()
 })
 
@@ -20,6 +30,11 @@ tape('basic parse + stringify', function (t) {
 
 tape('complex parse', function (t) {
   t.same(schema.parse(fixture('complex.proto')), require('./fixtures/complex.json'))
+  t.end()
+})
+
+tape('complex parse (bytes)', function (t) {
+  t.same(schema.parse(fixtureBytes('complex.proto')), require('./fixtures/complex.json'))
   t.end()
 })
 
