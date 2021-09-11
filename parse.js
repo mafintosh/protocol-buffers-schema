@@ -302,11 +302,11 @@ var onsyntaxversion = function (tokens) {
 
   var version = tokens.shift()
   switch (version) {
-    case '"proto2"':
+    case '"proto2"': case "'proto2'":
       version = 2
       break
 
-    case '"proto3"':
+    case '"proto3"': case "'proto3'":
       version = 3
       break
 
@@ -504,7 +504,7 @@ var onoptionMap = function (tokens) {
 
 var onimport = function (tokens) {
   tokens.shift()
-  var file = tokens.shift().replace(/^"+|"+$/gm, '')
+  var file = tokens.shift().replace(/^['"]+|['"]+$/gm, '')
 
   if (tokens[0] !== ';') throw new Error('Unexpected token: ' + tokens[0] + '. Expected ";"')
 
