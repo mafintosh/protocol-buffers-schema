@@ -2,7 +2,10 @@
   "syntax": 3,
   "package": null,
   "imports": [
-    "google/protobuf/descriptor.proto"
+    {
+      "file": "google/protobuf/descriptor.proto",
+      "flag": null
+    }
   ],
   "enums": [
     {

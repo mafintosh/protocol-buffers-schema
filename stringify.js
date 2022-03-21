@@ -1,5 +1,5 @@
 function onimport (i, result) {
-  result.push('import "' + i + '";', '')
+  result.push('import ' + (i.flag ? i.flag + ' "' : '"') + i.file + '";', '')
   return result
 }
 
