@@ -53,6 +53,13 @@ tape('schema with imports', function (t) {
   t.end()
 })
 
+tape('schema without quotes', function (t) {
+  t.throws(function () {
+    schema.parse('import foo;')
+  }, /Unexpected import <foo>. Expecting a string literal./)
+  t.end()
+})
+
 tape('schema with imports loaded by path', function (t) {
   t.same(schema.parse(fixture('search.proto')), require('./fixtures/search.json'))
   t.end()

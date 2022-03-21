@@ -511,11 +511,20 @@ function onoptionMap (tokens) {
 
 function onimport (tokens) {
   tokens.shift()
-  const file = tokens.shift().replace(/^"+|"+$/gm, '')
+  let token = tokens.shift()
 
-  if (tokens[0] !== ';') throw new Error('Unexpected token: ' + tokens[0] + '. Expected ";"')
+  if (token === 'public' || token === 'weak') {
+    token = tokens.shift()
+  }
+  if (!/^".*"$/.test(token)) {
+    throw new Error('Unexpected import <' + token + '>. Expecting a string literal.')
+  }
+  const file = token.replace(/^"+|"+$/gm, '')
 
-  tokens.shift()
+  token = tokens.shift()
+
+  if (token !== ';') throw new Error('Unexpected token: ' + token + '. Expected ";"')
+
   return file
 }
 
