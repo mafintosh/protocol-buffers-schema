@@ -1,11 +1,11 @@
 module.exports = function (sch) {
-  var noComments = function (line) {
-    var i = line.indexOf('//')
+  const noComments = function (line) {
+    const i = line.indexOf('//')
     return i > -1 ? line.slice(0, i) : line
   }
 
-  var noMultilineComments = function () {
-    var inside = false
+  const noMultilineComments = function () {
+    let inside = false
     return function (token) {
       if (token === '/*') {
         inside = true
@@ -19,27 +19,27 @@ module.exports = function (sch) {
     }
   }
 
-  var trim = function (line) {
+  const trim = function (line) {
     return line.trim()
   }
 
-  var removeQuotedLines = function (list) {
+  const removeQuotedLines = function (list) {
     return function (str) {
-      var s = '$' + list.length + '$'
+      const s = '$' + list.length + '$'
       list.push(str)
       return s
     }
   }
 
-  var restoreQuotedLines = function (list) {
-    var re = /^\$(\d+)\$$/
+  const restoreQuotedLines = function (list) {
+    const re = /^\$(\d+)\$$/
     return function (line) {
-      var m = line.match(re)
+      const m = line.match(re)
       return m ? list[+m[1]] : line
     }
   }
 
-  var replacements = []
+  const replacements = []
   return sch
     .replace(/"(\\"|[^"\n])*?"|'(\\'|[^'\n])*?'/gm, removeQuotedLines(replacements))
     .replace(/([;,{}()=:[\]<>]|\/\*|\*\/)/g, ' $1 ')

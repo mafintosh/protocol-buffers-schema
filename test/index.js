@@ -1,9 +1,9 @@
-var tape = require('tape')
-var path = require('path')
-var fs = require('fs')
-var schema = require('../')
+const tape = require('tape')
+const path = require('path')
+const fs = require('fs')
+const schema = require('../')
 
-var fixture = function (name) {
+const fixture = function (name) {
   return fs.readFileSync(path.join(__dirname, 'fixtures', name), 'utf-8')
 }
 
@@ -13,7 +13,7 @@ tape('basic parse', function (t) {
 })
 
 tape('basic parse + stringify', function (t) {
-  var syntax = 'syntax = "proto3";\n\n'
+  const syntax = 'syntax = "proto3";\n\n'
   t.same(schema.stringify(schema.parse(fixture('basic.proto'))), syntax + fixture('basic.proto'))
   t.end()
 })
@@ -24,7 +24,7 @@ tape('complex parse', function (t) {
 })
 
 tape('complex parse + stringify', function (t) {
-  var syntax = 'syntax = "proto3";\n\n'
+  const syntax = 'syntax = "proto3";\n\n'
   t.same(schema.stringify(schema.parse(fixture('complex.proto'))), syntax + fixture('complex.proto'))
   t.end()
 })
@@ -64,7 +64,7 @@ tape('schema with extends', function (t) {
 })
 
 tape('comparing extended and not extended schema', function (t) {
-  var sch = schema.parse(fixture('extend.proto'))
+  const sch = schema.parse(fixture('extend.proto'))
   t.same(sch.messages.MsgNormal, sch.messages.MsgExtend)
   t.end()
 })
@@ -104,13 +104,13 @@ tape('service parse', function (t) {
 })
 
 tape('service parse + stringify', function (t) {
-  var syntax = 'syntax = "proto3";\n\n'
+  const syntax = 'syntax = "proto3";\n\n'
   t.same(schema.stringify(schema.parse(fixture('service.proto'))), syntax + fixture('service.proto'))
   t.end()
 })
 
 tape('import parse + stringify', function (t) {
-  var syntax = 'syntax = "proto3";\n\n'
+  const syntax = 'syntax = "proto3";\n\n'
   t.same(schema.stringify(schema.parse(fixture('search.proto'))), syntax + fixture('search.proto'))
   t.end()
 })

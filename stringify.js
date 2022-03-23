@@ -1,14 +1,14 @@
-var onimport = function (i, result) {
+function onimport (i, result) {
   result.push('import "' + i + '";', '')
   return result
 }
 
-var onfield = function (f, result) {
-  var prefix = f.repeated ? 'repeated' : f.required ? 'required' : 'optional'
+function onfield (f, result) {
+  let prefix = f.repeated ? 'repeated' : f.required ? 'required' : 'optional'
   if (f.type === 'map') prefix = 'map<' + f.map.from + ',' + f.map.to + '>'
   if (f.oneof) prefix = ''
 
-  var opts = Object.keys(f.options || {}).map(function (key) {
+  let opts = Object.keys(f.options || {}).map(function (key) {
     return key + ' = ' + f.options[key]
   }).join(',')
 
@@ -18,7 +18,7 @@ var onfield = function (f, result) {
   return result
 }
 
-var onmessage = function (m, result) {
+function onmessage (m, result) {
   result.push('message ' + m.name + ' {')
 
   if (!m.options) m.options = {}
@@ -34,7 +34,7 @@ var onmessage = function (m, result) {
     result.push(onmessage(m, []))
   })
 
-  var oneofs = {}
+  const oneofs = {}
 
   if (!m.fields) m.fields = []
   m.fields.forEach(function (f) {
@@ -56,38 +56,38 @@ var onmessage = function (m, result) {
   return result
 }
 
-var onenum = function (e, result) {
+function onenum (e, result) {
   result.push('enum ' + e.name + ' {')
   if (!e.options) e.options = {}
-  var options = onoption(e.options, [])
+  const options = onoption(e.options, [])
   if (options.length > 1) {
     result.push(options.slice(0, -1))
   }
-  Object.keys(e.values).map(function (v) {
-    var val = onenumvalue(e.values[v])
+  Object.keys(e.values).forEach(function (v) {
+    const val = onenumvalue(e.values[v])
     result.push([v + ' = ' + val + ';'])
   })
   result.push('}', '')
   return result
 }
 
-var onenumvalue = function (v, result) {
-  var opts = Object.keys(v.options || {}).map(function (key) {
+function onenumvalue (v, result) {
+  let opts = Object.keys(v.options || {}).map(function (key) {
     return key + ' = ' + v.options[key]
   }).join(',')
 
   if (opts) opts = ' [' + opts + ']'
-  var val = v.value + opts
+  const val = v.value + opts
   return val
 }
 
-var onoption = function (o, result) {
-  var keys = Object.keys(o)
+function onoption (o, result) {
+  const keys = Object.keys(o)
   keys.forEach(function (option) {
-    var v = o[option]
+    let v = o[option]
     if (~option.indexOf('.')) option = '(' + option + ')'
 
-    var type = typeof v
+    const type = typeof v
 
     if (type === 'object') {
       v = onoptionMap(v, [])
@@ -104,12 +104,12 @@ var onoption = function (o, result) {
   return result
 }
 
-var onoptionMap = function (o, result) {
-  var keys = Object.keys(o)
+function onoptionMap (o, result) {
+  const keys = Object.keys(o)
   keys.forEach(function (k) {
-    var v = o[k]
+    let v = o[k]
 
-    var type = typeof v
+    const type = typeof v
 
     if (type === 'object') {
       if (Array.isArray(v)) {
@@ -130,7 +130,7 @@ var onoptionMap = function (o, result) {
   return result
 }
 
-var onservices = function (s, result) {
+function onservices (s, result) {
   result.push('service ' + s.name + ' {')
 
   if (!s.options) s.options = {}
@@ -144,8 +144,8 @@ var onservices = function (s, result) {
   return result
 }
 
-var onrpc = function (rpc, result) {
-  var def = 'rpc ' + rpc.name + '('
+function onrpc (rpc, result) {
+  let def = 'rpc ' + rpc.name + '('
   if (rpc.client_streaming) def += 'stream '
   def += rpc.input_type + ') returns ('
   if (rpc.server_streaming) def += 'stream '
@@ -153,7 +153,7 @@ var onrpc = function (rpc, result) {
 
   if (!rpc.options) rpc.options = {}
 
-  var options = onoption(rpc.options, [])
+  const options = onoption(rpc.options, [])
   if (options.length > 1) {
     result.push(def + ' {', options.slice(0, -1), '}')
   } else {
@@ -163,7 +163,7 @@ var onrpc = function (rpc, result) {
   return result
 }
 
-var indent = function (lvl) {
+function indent (lvl) {
   return function (line) {
     if (Array.isArray(line)) return line.map(indent(lvl + '  ')).join('\n')
     return lvl + line
@@ -171,7 +171,7 @@ var indent = function (lvl) {
 }
 
 module.exports = function (schema) {
-  var result = []
+  const result = []
 
   result.push('syntax = "proto' + schema.syntax + '";', '')
 
