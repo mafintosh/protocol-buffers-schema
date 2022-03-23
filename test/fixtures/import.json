@@ -1,7 +1,12 @@
 {
   "syntax": 3,
   "package": null,
-  "imports": ["./result.proto", "./other_result.proto"],
+  "imports": [
+    { "file": "./result.proto", "flag": null },
+    { "file": "./other_result.proto", "flag": null },
+    { "file": "./public.proto", "flag": "public" },
+    { "file": "./weak.proto", "flag": "weak" }
+  ],
   "enums": [],
   "extends": [],
   "messages": [

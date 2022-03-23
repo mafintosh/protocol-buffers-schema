@@ -1,9 +1,9 @@
-var tokenize = require('./tokenize')
-var MAX_RANGE = 0x1FFFFFFF
+const tokenize = require('./tokenize')
+const MAX_RANGE = 0x1FFFFFFF
 
 // "Only repeated fields of primitive numeric types (types which use the varint, 32-bit, or 64-bit wire types) can be declared "packed"."
 // https://developers.google.com/protocol-buffers/docs/encoding#optional
-var PACKABLE_TYPES = [
+const PACKABLE_TYPES = [
   // varint wire types
   'int32', 'int64', 'uint32', 'uint64', 'sint32', 'sint64', 'bool',
   // + ENUMS
@@ -13,13 +13,13 @@ var PACKABLE_TYPES = [
   'fixed32', 'sfixed32', 'float'
 ]
 
-var onfieldoptionvalue = function (tokens) {
-  var value = tokens.shift()
+function onfieldoptionvalue (tokens) {
+  let value = tokens.shift()
   if (value !== '{') {
     return value
   }
   value = {}
-  var field = ''
+  let field = ''
   while (tokens.length) {
     switch (tokens[0]) {
       case '}':
@@ -35,20 +35,20 @@ var onfieldoptionvalue = function (tokens) {
   }
 }
 
-var onfieldoptions = function (tokens) {
-  var opts = {}
+function onfieldoptions (tokens) {
+  const opts = {}
 
   while (tokens.length) {
     switch (tokens[0]) {
       case '[':
       case ',': {
         tokens.shift()
-        var name = tokens.shift()
+        let name = tokens.shift()
         if (name === '(') { // handling [(A) = B]
           name = tokens.shift()
           tokens.shift() // remove the end of bracket
         }
-        var field = []
+        let field = []
         if (tokens[0][0] === '.') {
           field = tokens[0].substr(1).split('.')
           tokens.shift()
@@ -59,11 +59,11 @@ var onfieldoptions = function (tokens) {
 
         // for option (A).b.c
         // path will be ['A', 'b'] and lastFieldName 'c'
-        var path = [name].concat(field)
-        var lastFieldName = path.pop()
+        const path = [name].concat(field)
+        const lastFieldName = path.pop()
 
         // opt references opts.A.b
-        var opt = path.reduce(function (opt, n, index) {
+        const opt = path.reduce(function (opt, n, index) {
           if (opt[n] == null) {
             opt[n] = {}
           }
@@ -86,8 +86,8 @@ var onfieldoptions = function (tokens) {
   throw new Error('No closing tag for field options')
 }
 
-var onfield = function (tokens) {
-  var field = {
+function onfield (tokens) {
+  const field = {
     name: null,
     type: null,
     tag: -1,
@@ -123,11 +123,13 @@ var onfield = function (tokens) {
       case 'repeated':
       case 'required':
       case 'optional':
-        var t = tokens.shift()
-        field.required = t === 'required'
-        field.repeated = t === 'repeated'
-        field.type = tokens.shift()
-        field.name = tokens.shift()
+        {
+          const t = tokens.shift()
+          field.required = t === 'required'
+          field.repeated = t === 'repeated'
+          field.type = tokens.shift()
+          field.name = tokens.shift()
+        }
         break
 
       case '[':
@@ -149,8 +151,8 @@ var onfield = function (tokens) {
   throw new Error('No ; found for message field')
 }
 
-var onmessagebody = function (tokens) {
-  var body = {
+function onmessagebody (tokens) {
+  const body = {
     enums: [],
     options: {},
     messages: [],
@@ -182,14 +184,16 @@ var onmessagebody = function (tokens) {
 
       case 'oneof':
         tokens.shift()
-        var name = tokens.shift()
-        if (tokens[0] !== '{') throw new Error('Unexpected token in oneof: ' + tokens[0])
-        tokens.shift()
-        while (tokens[0] !== '}') {
-          tokens.unshift('optional')
-          var field = onfield(tokens)
-          field.oneof = name
-          body.fields.push(field)
+        {
+          const name = tokens.shift()
+          if (tokens[0] !== '{') throw new Error('Unexpected token in oneof: ' + tokens[0])
+          tokens.shift()
+          while (tokens[0] !== '}') {
+            tokens.unshift('optional')
+            const field = onfield(tokens)
+            field.oneof = name
+            body.fields.push(field)
+          }
         }
         tokens.shift()
         break
@@ -210,9 +214,11 @@ var onmessagebody = function (tokens) {
         break
 
       case 'option':
-        var opt = onoption(tokens)
-        if (body.options[opt.name] !== undefined) throw new Error('Duplicate option ' + opt.name)
-        body.options[opt.name] = opt.value
+        {
+          const opt = onoption(tokens)
+          if (body.options[opt.name] !== undefined) throw new Error('Duplicate option ' + opt.name)
+          body.options[opt.name] = opt.value
+        }
         break
 
       default:
@@ -227,32 +233,32 @@ var onmessagebody = function (tokens) {
   return body
 }
 
-var onextend = function (tokens) {
-  var out = {
+function onextend (tokens) {
+  const out = {
     name: tokens[1],
     message: onmessage(tokens)
   }
   return out
 }
 
-var onextensions = function (tokens) {
+function onextensions (tokens) {
   tokens.shift()
-  var from = Number(tokens.shift())
+  const from = Number(tokens.shift())
   if (isNaN(from)) throw new Error('Invalid from in extensions definition')
   if (tokens.shift() !== 'to') throw new Error("Expected keyword 'to' in extensions definition")
-  var to = tokens.shift()
+  let to = tokens.shift()
   if (to === 'max') to = MAX_RANGE
   to = Number(to)
   if (isNaN(to)) throw new Error('Invalid to in extensions definition')
   if (tokens.shift() !== ';') throw new Error('Missing ; in extensions definition')
   return { from: from, to: to }
 }
-var onmessage = function (tokens) {
+function onmessage (tokens) {
   tokens.shift()
 
-  var lvl = 1
-  var body = []
-  var msg = {
+  let lvl = 1
+  let body = []
+  const msg = {
     name: tokens.shift(),
     options: {},
     enums: [],
@@ -286,21 +292,21 @@ var onmessage = function (tokens) {
   if (lvl) throw new Error('No closing tag for message')
 }
 
-var onpackagename = function (tokens) {
+function onpackagename (tokens) {
   tokens.shift()
-  var name = tokens.shift()
+  const name = tokens.shift()
   if (tokens[0] !== ';') throw new Error('Expected ; but found ' + tokens[0])
   tokens.shift()
   return name
 }
 
-var onsyntaxversion = function (tokens) {
+function onsyntaxversion (tokens) {
   tokens.shift()
 
   if (tokens[0] !== '=') throw new Error('Expected = but found ' + tokens[0])
   tokens.shift()
 
-  var version = tokens.shift()
+  let version = tokens.shift()
   switch (version) {
     case '"proto2"':
       version = 2
@@ -320,7 +326,7 @@ var onsyntaxversion = function (tokens) {
   return version
 }
 
-var onenumvalue = function (tokens) {
+function onenumvalue (tokens) {
   if (tokens.length < 4) throw new Error('Invalid enum value: ' + tokens.slice(0, 3).join(' '))
   if (tokens[0] === 'reserved') {
     tokens.shift()
@@ -333,9 +339,9 @@ var onenumvalue = function (tokens) {
   if (tokens[1] !== '=') throw new Error('Expected = but found ' + tokens[1])
   if (tokens[3] !== ';' && tokens[3] !== '[') throw new Error('Expected ; or [ but found ' + tokens[1])
 
-  var name = tokens.shift()
+  const name = tokens.shift()
   tokens.shift()
-  var val = {
+  const val = {
     value: null,
     options: {}
   }
@@ -351,10 +357,10 @@ var onenumvalue = function (tokens) {
   }
 }
 
-var onenum = function (tokens) {
+function onenum (tokens) {
   tokens.shift()
-  var options = {}
-  var e = {
+  let options = {}
+  const e = {
     name: tokens.shift(),
     values: {},
     options: {}
@@ -375,7 +381,7 @@ var onenum = function (tokens) {
       e.options[options.name] = options.value
       continue
     }
-    var val = onenumvalue(tokens)
+    const val = onenumvalue(tokens)
     if (val !== null) {
       e.values[val.name] = val.val
     }
@@ -384,11 +390,11 @@ var onenum = function (tokens) {
   throw new Error('No closing tag for enum')
 }
 
-var onoption = function (tokens) {
-  var name = null
-  var value = null
+function onoption (tokens) {
+  let name = null
+  let value = null
 
-  var parse = function (value) {
+  function parse (value) {
     if (value === 'true') return true
     if (value === 'false') return false
     return value.replace(/^"+|"+$/gm, '')
@@ -402,15 +408,16 @@ var onoption = function (tokens) {
     switch (tokens[0]) {
       case 'option':
         tokens.shift()
+        {
+          const hasBracket = tokens[0] === '('
+          if (hasBracket) tokens.shift()
 
-        var hasBracket = tokens[0] === '('
-        if (hasBracket) tokens.shift()
+          name = tokens.shift()
 
-        name = tokens.shift()
-
-        if (hasBracket) {
-          if (tokens[0] !== ')') throw new Error('Expected ) but found ' + tokens[0])
-          tokens.shift()
+          if (hasBracket) {
+            if (tokens[0] !== ')') throw new Error('Expected ) but found ' + tokens[0])
+            tokens.shift()
+          }
         }
 
         if (tokens[0][0] === '.') {
@@ -438,14 +445,14 @@ var onoption = function (tokens) {
   }
 }
 
-var onoptionMap = function (tokens) {
-  var parse = function (value) {
+function onoptionMap (tokens) {
+  function parse (value) {
     if (value === 'true') return true
     if (value === 'false') return false
     return value.replace(/^"+|"+$/gm, '')
   }
 
-  var map = {}
+  const map = {}
 
   while (tokens.length) {
     if (tokens[0] === '}') {
@@ -453,16 +460,16 @@ var onoptionMap = function (tokens) {
       return map
     }
 
-    var hasBracket = tokens[0] === '('
+    const hasBracket = tokens[0] === '('
     if (hasBracket) tokens.shift()
 
-    var key = tokens.shift()
+    const key = tokens.shift()
     if (hasBracket) {
       if (tokens[0] !== ')') throw new Error('Expected ) but found ' + tokens[0])
       tokens.shift()
     }
 
-    var value = null
+    let value = null
 
     switch (tokens[0]) {
       case ':':
@@ -502,20 +509,34 @@ var onoptionMap = function (tokens) {
   throw new Error('No closing tag for option map')
 }
 
-var onimport = function (tokens) {
+function onimport (tokens) {
   tokens.shift()
-  var file = tokens.shift().replace(/^"+|"+$/gm, '')
+  let token = tokens.shift()
 
-  if (tokens[0] !== ';') throw new Error('Unexpected token: ' + tokens[0] + '. Expected ";"')
+  let flag = null
+  if (token === 'public' || token === 'weak') {
+    flag = token
+    token = tokens.shift()
+  }
+  if (!/^".*"$/.test(token)) {
+    throw new Error('Unexpected import <' + token + '>. Expecting a string literal.')
+  }
+  const file = token.replace(/^"+|"+$/gm, '')
 
-  tokens.shift()
-  return file
+  token = tokens.shift()
+
+  if (token !== ';') throw new Error('Unexpected token: ' + token + '. Expected ";"')
+
+  return {
+    file: file,
+    flag: flag
+  }
 }
 
-var onservice = function (tokens) {
+function onservice (tokens) {
   tokens.shift()
 
-  var service = {
+  const service = {
     name: tokens.shift(),
     methods: [],
     options: {}
@@ -534,9 +555,11 @@ var onservice = function (tokens) {
 
     switch (tokens[0]) {
       case 'option':
-        var opt = onoption(tokens)
-        if (service.options[opt.name] !== undefined) throw new Error('Duplicate option ' + opt.name)
-        service.options[opt.name] = opt.value
+        {
+          const opt = onoption(tokens)
+          if (service.options[opt.name] !== undefined) throw new Error('Duplicate option ' + opt.name)
+          service.options[opt.name] = opt.value
+        }
         break
       case 'rpc':
         service.methods.push(onrpc(tokens))
@@ -549,10 +572,10 @@ var onservice = function (tokens) {
   throw new Error('No closing tag for service')
 }
 
-var onrpc = function (tokens) {
+function onrpc (tokens) {
   tokens.shift()
 
-  var rpc = {
+  const rpc = {
     name: tokens.shift(),
     input_type: null,
     output_type: null,
@@ -607,7 +630,7 @@ var onrpc = function (tokens) {
     }
 
     if (tokens[0] === 'option') {
-      var opt = onoption(tokens)
+      const opt = onoption(tokens)
       if (rpc.options[opt.name] !== undefined) throw new Error('Duplicate option ' + opt.name)
       rpc.options[opt.name] = opt.value
     } else {
@@ -618,17 +641,12 @@ var onrpc = function (tokens) {
   throw new Error('No closing tag for rpc')
 }
 
-var parse = function (buf) {
-  var tokens = tokenize(buf.toString())
+function parse (buf) {
+  let tokens = tokenize(buf.toString())
   // check for isolated strings in tokens by looking for opening quote
-  for (var i = 0; i < tokens.length; i++) {
+  for (let i = 0; i < tokens.length; i++) {
     if (/^("|')([^'"]*)$/.test(tokens[i])) {
-      var j
-      if (tokens[i].length === 1) {
-        j = i + 1
-      } else {
-        j = i
-      }
+      let j = (tokens[i].length === 1) ? i + 1 : i
       // look ahead for the closing quote and collapse all
       // in-between tokens into a single token
       for (j; j < tokens.length; j++) {
@@ -639,7 +657,7 @@ var parse = function (buf) {
       }
     }
   }
-  var schema = {
+  const schema = {
     syntax: 3,
     package: null,
     imports: [],
@@ -649,7 +667,7 @@ var parse = function (buf) {
     extends: []
   }
 
-  var firstline = true
+  let firstline = true
 
   while (tokens.length) {
     switch (tokens[0]) {
@@ -671,9 +689,11 @@ var parse = function (buf) {
         break
 
       case 'option':
-        var opt = onoption(tokens)
-        if (schema.options[opt.name]) throw new Error('Duplicate option ' + opt.name)
-        schema.options[opt.name] = opt.value
+        {
+          const opt = onoption(tokens)
+          if (schema.options[opt.name]) throw new Error('Duplicate option ' + opt.name)
+          schema.options[opt.name] = opt.value
+        }
         break
 
       case 'import':
@@ -711,10 +731,10 @@ var parse = function (buf) {
 
   schema.messages.forEach(function (msg) {
     msg.fields.forEach(function (field) {
-      var fieldSplit
-      var messageName
-      var nestedEnumName
-      var message
+      let fieldSplit
+      let messageName
+      let nestedEnumName
+      let message
 
       function enumNameIsFieldType (en) {
         return en.name === field.type
@@ -745,6 +765,7 @@ var parse = function (buf) {
                 message = msg
                 return msg
               }
+              return false
             })
 
             if (message && message.enums && message.enums.some(enumNameIsNestedEnumName)) {
