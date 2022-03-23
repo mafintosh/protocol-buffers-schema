@@ -8,11 +8,11 @@
       "values": {
         "x": {
           "value": 1,
-          "options": []
+          "options": {}
         },
         "y": {
           "value": 10,
-          "options": []
+          "options": {}
         }
       },
       "options": {}

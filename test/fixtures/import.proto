@@ -1,5 +1,7 @@
 import "./result.proto";
 import "./other_result.proto";
+import public "./public.proto";
+import weak "./weak.proto";
 
 message SearchResponse {
   repeated Result result = 1;

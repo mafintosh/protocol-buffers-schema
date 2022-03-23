@@ -1,7 +1,7 @@
-var schema = require('./')
-var fs = require('fs')
+const schema = require('./')
+const fs = require('fs')
 
-var sch = schema.parse(fs.readFileSync('example.proto'))
+const sch = schema.parse(fs.readFileSync('example.proto'))
 
 console.log('Parsed schema:')
 console.log(JSON.stringify(sch, null, 2))
