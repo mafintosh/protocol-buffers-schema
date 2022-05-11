@@ -123,9 +123,11 @@ var onfield = function (tokens) {
       case 'repeated':
       case 'required':
       case 'optional':
+      case 'implicit-optional':
         var t = tokens.shift()
         field.required = t === 'required'
         field.repeated = t === 'repeated'
+        if (t === 'optional') { field.optional = true }
         field.type = tokens.shift()
         field.name = tokens.shift()
         break
@@ -219,7 +221,7 @@ var onmessagebody = function (tokens) {
         // proto3 does not require the use of optional/required, assumed as optional
         // "singular: a well-formed message can have zero or one of this field (but not more than one)."
         // https://developers.google.com/protocol-buffers/docs/proto3#specifying-field-rules
-        tokens.unshift('optional')
+        tokens.unshift('implicit-optional')
         body.fields.push(onfield(tokens))
     }
   }

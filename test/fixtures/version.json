@@ -41,6 +41,7 @@
           "oneof": null,
           "required": false,
           "repeated": false,
+          "optional": true,
           "options": {}
         }
       ]
@@ -81,6 +82,7 @@
           "oneof": null,
           "required": false,
           "repeated": false,
+          "optional": true,
           "options": {}
         }
       ]
