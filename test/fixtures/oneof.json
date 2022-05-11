@@ -19,6 +19,7 @@
           "oneof": "test_oneof",
           "required": false,
           "repeated": false,
+          "optional": true,
           "options": {}
         },
         {
@@ -29,6 +30,7 @@
           "oneof": "test_oneof",
           "required": false,
           "repeated": false,
+          "optional": true,
           "options": {}
         }
 
