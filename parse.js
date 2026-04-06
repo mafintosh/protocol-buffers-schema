@@ -18,7 +18,7 @@ var onfieldoptionvalue = function (tokens) {
   if (value !== '{') {
     return value
   }
-  value = {}
+  value = Object.create(null)
   var field = ''
   while (tokens.length) {
     switch (tokens[0]) {
@@ -36,7 +36,7 @@ var onfieldoptionvalue = function (tokens) {
 }
 
 var onfieldoptions = function (tokens) {
-  var opts = {}
+  var opts = Object.create(null)
 
   while (tokens.length) {
     switch (tokens[0]) {
@@ -65,7 +65,7 @@ var onfieldoptions = function (tokens) {
         // opt references opts.A.b
         var opt = path.reduce(function (opt, n, index) {
           if (opt[n] == null) {
-            opt[n] = {}
+            opt[n] = Object.create(null)
           }
           return opt[n]
         }, opts)
@@ -95,7 +95,7 @@ var onfield = function (tokens) {
     oneof: null,
     required: false,
     repeated: false,
-    options: {}
+    options: Object.create(null)
   }
 
   while (tokens.length) {
@@ -152,7 +152,7 @@ var onfield = function (tokens) {
 var onmessagebody = function (tokens) {
   var body = {
     enums: [],
-    options: {},
+    options: Object.create(null),
     messages: [],
     fields: [],
     extends: [],
@@ -254,7 +254,7 @@ var onmessage = function (tokens) {
   var body = []
   var msg = {
     name: tokens.shift(),
-    options: {},
+    options: Object.create(null),
     enums: [],
     extends: [],
     messages: [],
@@ -337,7 +337,7 @@ var onenumvalue = function (tokens) {
   tokens.shift()
   var val = {
     value: null,
-    options: {}
+    options: Object.create(null)
   }
   val.value = Number(tokens.shift())
   if (tokens[0] === '[') {
@@ -357,7 +357,7 @@ var onenum = function (tokens) {
   var e = {
     name: tokens.shift(),
     values: {},
-    options: {}
+    options: Object.create(null)
   }
 
   if (tokens[0] !== '{') throw new Error('Expected { but found ' + tokens[0])
@@ -445,7 +445,7 @@ var onoptionMap = function (tokens) {
     return value.replace(/^"+|"+$/gm, '')
   }
 
-  var map = {}
+  var map = Object.create(null)
 
   while (tokens.length) {
     if (tokens[0] === '}') {
@@ -518,7 +518,7 @@ var onservice = function (tokens) {
   var service = {
     name: tokens.shift(),
     methods: [],
-    options: {}
+    options: Object.create(null)
   }
 
   if (tokens[0] !== '{') throw new Error('Expected { but found ' + tokens[0])
@@ -558,7 +558,7 @@ var onrpc = function (tokens) {
     output_type: null,
     client_streaming: false,
     server_streaming: false,
-    options: {}
+    options: Object.create(null)
   }
 
   if (tokens[0] !== '(') throw new Error('Expected ( but found ' + tokens[0])
@@ -645,7 +645,7 @@ var parse = function (buf) {
     imports: [],
     enums: [],
     messages: [],
-    options: {},
+    options: Object.create(null),
     extends: []
   }
 
