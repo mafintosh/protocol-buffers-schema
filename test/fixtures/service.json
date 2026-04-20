@@ -20,7 +20,8 @@
 			    "map": null,
 			    "oneof": null,
 			    "required": false,
-			    "repeated": false,
+				"repeated": false,
+				"optional": true,
 			    "options": {}
 			  }
 			]

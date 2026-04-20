@@ -17,6 +17,7 @@
       "oneof": null,
       "required": false,
       "repeated": false,
+      "optional": true,
       "options": {
         "mylist": "\"some,values,[here]\""
       }
@@ -36,6 +37,7 @@
       "oneof": null,
       "required": false,
       "repeated": false,
+      "optional": true,
       "options": {
         "mylist2": "'[more, values], [here]'"
       }

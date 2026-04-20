@@ -42,6 +42,7 @@
           "oneof": null,
           "required": false,
           "repeated": false,
+          "optional": true,
           "options": {
             "my_field_option": "4.5"
           }
@@ -54,6 +55,7 @@
           "oneof": null,
           "required": false,
           "repeated": false,
+          "optional": true,
           "options": {}
         }
       ],
@@ -92,6 +94,7 @@
           "oneof": null,
           "required": false,
           "repeated": false,
+          "optional": true,
           "options": {}
         },
         {
@@ -102,6 +105,7 @@
           "oneof": null,
           "required": false,
           "repeated": false,
+          "optional": true,
           "options": {}
         }
       ],
@@ -122,6 +126,7 @@
           "oneof": null,
           "required": false,
           "repeated": false,
+          "optional": true,
           "options": {
             "foo_options": {
               "opt1": "123",
@@ -137,6 +142,7 @@
           "oneof": null,
           "required": false,
           "repeated": false,
+          "optional": true,
           "options": {
             "foo_options": {
               "opt1": "123",
@@ -169,6 +175,7 @@
             "oneof": null,
             "required": false,
             "repeated": false,
+            "optional": true,
             "options": {}
           }
         ],
@@ -192,6 +199,7 @@
             "oneof": null,
             "required": false,
             "repeated": false,
+            "optional": true,
             "options": {}
           }
         ],
@@ -215,6 +223,7 @@
             "oneof": null,
             "required": false,
             "repeated": false,
+            "optional": true,
             "options": {}
           }
         ],
@@ -238,6 +247,7 @@
             "oneof": null,
             "required": false,
             "repeated": false,
+            "optional": true,
             "options": {}
           }
         ],
@@ -261,6 +271,7 @@
             "oneof": null,
             "required": false,
             "repeated": false,
+            "optional": true,
             "options": {}
           }
         ],
@@ -284,6 +295,7 @@
             "oneof": null,
             "required": false,
             "repeated": false,
+            "optional": true,
             "options": {}
           }
         ],
@@ -307,6 +319,7 @@
             "oneof": null,
             "required": false,
             "repeated": false,
+            "optional": true,
             "options": {}
           }
         ],
@@ -330,6 +343,7 @@
             "oneof": null,
             "required": false,
             "repeated": false,
+            "optional": true,
             "options": {}
           }
         ],

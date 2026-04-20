@@ -53,6 +53,7 @@
         "oneof": null,
         "required": false,
         "repeated": false,
+        "optional": true,
         "options": {
           "default": "HOME"
         }
@@ -85,6 +86,7 @@
       "oneof": null,
       "required": false,
       "repeated": false,
+      "optional": true,
       "options": {}
     }, {
       "name": "phone",
