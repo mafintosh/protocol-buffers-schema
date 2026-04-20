@@ -618,8 +618,11 @@ var onrpc = function (tokens) {
   throw new Error('No closing tag for rpc')
 }
 
-var parse = function (buf) {
-  var tokens = tokenize(buf.toString())
+var parse = function (input) {
+  var source = typeof input === 'string'
+    ? input
+    : new TextDecoder().decode(input)
+  var tokens = tokenize(source)
   // check for isolated strings in tokens by looking for opening quote
   for (var i = 0; i < tokens.length; i++) {
     if (/^("|')([^'"]*)$/.test(tokens[i])) {
