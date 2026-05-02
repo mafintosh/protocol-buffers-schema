@@ -6,7 +6,7 @@ No nonsense [protocol buffers](https://developers.google.com/protocol-buffers) s
 npm install protocol-buffers-schema
 ```
 
-[![build status](http://img.shields.io/travis/mafintosh/protocol-buffers-schema.svg?style=flat)](http://travis-ci.org/mafintosh/protocol-buffers-schema)
+[![build status](https://github.com/mafintosh/protocol-buffers-schema/actions/workflows/test.yml/badge.svg)](https://github.com/mafintosh/protocol-buffers-schema/workflows/test.yml)
 
 ## Usage
 
